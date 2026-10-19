@@ -3,7 +3,7 @@ import type { Bible, Study } from '@prisma/client';
 import { prisma } from '../db/prisma.ts';
 import { type Chat, type ChatResult, type JsonObject, OllamaClient, object, parseResponseJson } from './client.ts';
 import { policy, searchPrompt, suggestionsPrompt } from './prompts.ts';
-import { searchTerms } from '../mcp/tools.ts';
+import { searchTerms } from '../services/search.ts';
 export type EventWriter = (event: string, data: unknown) => void;
 export type Search = { bible_uuid: string; text: string; limit: number };
 export type ScriptureRow = { bible_uuid: string; book_uuid: string; book_name: string; chapter: number; ordinal: number; verse_uuid: string; text: string };

@@ -24,6 +24,8 @@ export async function bootstrap(databaseUrl: string): Promise<void> {
   const client = new Client({ connectionString: databaseUrl });
   await client.connect();
   try {
+    const version = Number((await client.query('SHOW server_version_num')).rows[0]?.server_version_num);
+    if (Math.floor(version / 10_000) !== 18) throw new Error('Database bootstrap requires PostgreSQL 18. No migration performed.');
     // Keep this connection alive for the entire CLI run so concurrent replicas cannot adopt twice.
     await client.query('SELECT pg_advisory_lock(1684628076, 5)');
     const historyExists = (await client.query("SELECT to_regclass('public._prisma_migrations') AS name")).rows[0]?.name;
@@ -34,7 +36,9 @@ export async function bootstrap(databaseUrl: string): Promise<void> {
     const expected = JSON.parse(await readFile(new URL('../../prisma/baseline-catalog.json', import.meta.url), 'utf8')) as Record<string, unknown[]>;
     if (!history.some(row => row.migration_name === baselineName && row.finished_at)) {
       const actual = await readCatalog(client);
-      if ((actual.relations?.length ?? 0) > 0) {
+      const bookkeeping = await client.query("SELECT to_regclass('public.schema_migrations') AS versions, to_regclass('public.ar_internal_metadata') AS metadata");
+      const hasExistingSchema = Object.values(actual).some(rows => rows.length > 0) || bookkeeping.rows[0]?.versions || bookkeeping.rows[0]?.metadata;
+      if (hasExistingSchema) {
         const differences = catalogDifference(expected, actual);
         if (differences.length) throw new Error(`Database does not match the supported baseline (${differences.join(', ')}). No adoption performed.`);
         const versionTable = (await client.query("SELECT to_regclass('public.schema_migrations') AS name")).rows[0]?.name;

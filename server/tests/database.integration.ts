@@ -98,6 +98,18 @@ test('column collation drift rejects adoption', { skip: !base }, async () => {
   } finally { await db.client.end(); }
 });
 
+test('an incomplete database containing only framework bookkeeping is rejected without changes', { skip: !base }, async () => {
+  const db = await fresh();
+  try {
+    await db.client.query('CREATE TABLE schema_migrations (version varchar PRIMARY KEY)');
+    await db.client.query("INSERT INTO schema_migrations (version) VALUES ('4')");
+    await assert.rejects(bootstrap(db.url), /does not match/);
+    const tables = (await db.client.query("SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename")).rows;
+    assert.deepEqual(tables, [{ tablename: 'schema_migrations' }]);
+    assert.deepEqual((await db.client.query('SELECT * FROM schema_migrations')).rows, [{ version: '4' }]);
+  } finally { await db.client.end(); }
+});
+
 function seedCommand(url: string, username = 'administrator'): Promise<{ code: number | null; output: string }> {
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, ['src/db/seed.ts'], {

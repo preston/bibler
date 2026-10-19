@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { createServer } from 'node:http';
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import express from 'express';
 import type { Study } from '@prisma/client';
@@ -60,6 +60,64 @@ test('Ollama returns structured HTTP/NDJSON errors and cancels an active respons
   const controller = new AbortController();
   const client = new OllamaClient(async (_url, options) => new Promise((_resolve, reject) => { options?.signal?.addEventListener('abort', () => reject(new Error('aborted'))); controller.abort(); }));
   assert.match((await client.run({ system: '', user: '', signal: controller.signal })).error!, /cancelled/);
+});
+async function provider(handler: (request: IncomingMessage, response: ServerResponse) => void, settings: Record<string, string>, run: () => Promise<void>) {
+  const server = createServer(handler);
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+  const values = { BIBLER_SERVER_OLLAMA_URL: `http://127.0.0.1:${(server.address() as AddressInfo).port}`, BIBLER_SERVER_OLLAMA_RETRIES: '0', ...settings };
+  const previous = Object.fromEntries(Object.keys(values).map(key => [key, process.env[key]]));
+  Object.assign(process.env, values);
+  try { await run(); }
+  finally {
+    for (const [key, value] of Object.entries(previous)) { if (value === undefined) delete process.env[key]; else process.env[key] = value; }
+    server.closeAllConnections(); await new Promise<void>(resolve => server.close(() => resolve()));
+  }
+}
+test('non-streaming generation may delay headers beyond the open/write deadlines while honoring the read budget', async () => {
+  await provider((request, response) => {
+    request.resume();
+    request.on('end', () => {
+      const timer = setTimeout(() => { response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify({ model: 'test', message: { content: 'Generation completed.' } })); }, 1200);
+      response.once('close', () => clearTimeout(timer));
+    });
+  }, { BIBLER_SERVER_OLLAMA_OPEN_TIMEOUT: '1', BIBLER_SERVER_OLLAMA_WRITE_TIMEOUT: '0', BIBLER_SERVER_OLLAMA_READ_TIMEOUT: '3' }, async () => {
+    const started = Date.now();
+    const result = await new OllamaClient().run({ system: 'Test transport only.', user: 'Return a status.' });
+    assert.equal(result.error, undefined, JSON.stringify(result)); assert.equal(result.output, 'Generation completed.'); assert.ok(Date.now() - started >= 1100);
+  });
+});
+test('read timeout covers stalled headers and response bodies with the configured read error', async () => {
+  for (const stall of ['headers', 'body'] as const) {
+    await provider((request, response) => {
+      request.resume();
+      request.on('end', () => {
+        if (stall === 'body') { response.setHeader('Content-Type', 'application/json'); response.write('{"model":"test","message":{"content":"'); }
+        const timer = setTimeout(() => { if (stall === 'headers') response.end('{"message":{"content":"Late"}}'); else response.end('Late"}}'); }, 1800);
+        response.once('close', () => clearTimeout(timer));
+      });
+    }, { BIBLER_SERVER_OLLAMA_OPEN_TIMEOUT: '3', BIBLER_SERVER_OLLAMA_WRITE_TIMEOUT: '0', BIBLER_SERVER_OLLAMA_READ_TIMEOUT: '1' }, async () => {
+      const result = await new OllamaClient().run({ system: 'Test transport only.', user: 'Return a status.' });
+      assert.match(result.error ?? '', /request timed out after 1s/); assert.match(result.hint ?? '', /BIBLER_SERVER_OLLAMA_READ_TIMEOUT/);
+    });
+  }
+});
+test('read deadlines reset on body activity for JSON and NDJSON streams longer than one read interval', async () => {
+  for (const stream of [false, true]) {
+    await provider((request, response) => {
+      request.resume();
+      request.on('end', () => {
+        response.setHeader('Content-Type', stream ? 'application/x-ndjson' : 'application/json');
+        const chunks = stream ? ['{"message":{"content":"One"}}\n', '{"message":{"content":" two"}}\n', '{"message":{"content":" three"}}\n', '{"model":"test","done":true}\n'] : ['{"model":"test",', '"message":{', '"content":"One two three"', '}}'];
+        let index = 0;
+        response.write(chunks[index++]!);
+        const timer = setInterval(() => { response.write(chunks[index++]!); if (index === chunks.length) { clearInterval(timer); response.end(); } }, 400);
+        response.once('close', () => clearInterval(timer));
+      });
+    }, { BIBLER_SERVER_OLLAMA_OPEN_TIMEOUT: '1', BIBLER_SERVER_OLLAMA_WRITE_TIMEOUT: '0', BIBLER_SERVER_OLLAMA_READ_TIMEOUT: '1', BIBLER_SERVER_OLLAMA_STREAM_READ_TIMEOUT: '1' }, async () => {
+      const started = Date.now(), result = await new OllamaClient().run({ system: 'Test transport only.', user: 'Return a status.', stream });
+      assert.equal(result.error, undefined, JSON.stringify(result)); assert.equal(result.output, 'One two three'); assert.ok(Date.now() - started >= 1100);
+    });
+  }
 });
 test('database planning constrains reference scopes and normalizes durations and task enums', async () => {
   const db = mockDb();

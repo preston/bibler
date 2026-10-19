@@ -1,3 +1,5 @@
+import { Agent, fetch as providerFetch, type Dispatcher } from 'undici';
+
 export type JsonObject = Record<string, unknown>;
 export type ChatResult = { model?: string; output?: unknown; raw?: JsonObject; structuredOutput?: boolean; error?: string; hint?: string; details?: unknown };
 export type ChatOptions = { system: string; user: string; model?: string | null; format?: unknown; options?: Record<string, number>; signal?: AbortSignal; stream?: boolean; onDelta?: (accumulated: string) => void };
@@ -23,7 +25,8 @@ export function parseResponseJson(text: unknown, depth = 0): unknown {
 /** Fetch is injected so tests exercise the actual request and NDJSON decoding without an Ollama host. */
 export class OllamaClient implements Chat {
   private readonly fetcher: typeof fetch;
-  constructor(fetcher: typeof fetch = fetch) { this.fetcher = fetcher; }
+  private readonly injectedFetch: boolean;
+  constructor(fetcher?: typeof fetch) { this.fetcher = fetcher ?? providerFetch as unknown as typeof fetch; this.injectedFetch = fetcher !== undefined; }
   async run(input: ChatOptions): Promise<ChatResult> {
     const base = process.env.BIBLER_SERVER_OLLAMA_URL?.trim();
     if (!base) return { error: 'BIBLER_SERVER_OLLAMA_URL is not configured.' };
@@ -32,18 +35,36 @@ export class OllamaClient implements Chat {
     const timeout = integerEnv(timeoutName, streaming ? 600 : 180);
     const attempts = streaming ? 1 : Math.max(1, integerEnv('BIBLER_SERVER_OLLAMA_RETRIES', 1) + 1);
     for (let attempt = 0; attempt < attempts; attempt++) {
+      const openTimeout = integerEnv('BIBLER_SERVER_OLLAMA_OPEN_TIMEOUT', 2);
+      const writeTimeout = integerEnv('BIBLER_SERVER_OLLAMA_WRITE_TIMEOUT', 30);
       const controller = new AbortController();
       const abort = () => controller.abort(input.signal?.reason);
       input.signal?.addEventListener('abort', abort, { once: true });
       if (input.signal?.aborted) abort();
-      let timeoutReached = false;
-      let timer: ReturnType<typeof setTimeout>;
-      const setTimer = (seconds: number) => {
+      let timeoutReached: 'read' | 'write' | undefined;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const setTimer = (seconds: number, stage: 'read' | 'write' = 'read') => {
         clearTimeout(timer);
-        timer = setTimeout(() => { timeoutReached = true; controller.abort(); }, Math.max(1, seconds * 1000));
+        timer = setTimeout(() => { timeoutReached = stage; controller.abort(); }, Math.max(1, seconds * 1000));
         timer.unref();
       };
-      setTimer(integerEnv('BIBLER_SERVER_OLLAMA_OPEN_TIMEOUT', 2) + integerEnv('BIBLER_SERVER_OLLAMA_WRITE_TIMEOUT', 30));
+      // Ollama may send no response headers until a non-streaming generation is
+      // complete. Connecting/uploading must not shorten its configured read budget.
+      const agent = new Agent({ connect: { timeout: Math.max(1, openTimeout * 1000) }, headersTimeout: Math.max(1, timeout * 1000), bodyTimeout: Math.max(1, timeout * 1000) });
+      const dispatcher = agent.compose((dispatch) => (options, handler) => dispatch(options, {
+        onRequestStart(connection, context) { setTimer(writeTimeout, 'write'); handler.onRequestStart?.(connection, context); },
+        onRequestUpgrade(...args) { handler.onRequestUpgrade?.(...args); },
+        onResponseStarted() { handler.onResponseStarted?.(); },
+        onResponseStart(...args) { setTimer(timeout); handler.onResponseStart?.(...args); },
+        onResponseData(...args) { setTimer(timeout); handler.onResponseData?.(...args); },
+        onResponseEnd(...args) { clearTimeout(timer); handler.onResponseEnd?.(...args); },
+        onResponseError(...args) { clearTimeout(timer); handler.onResponseError?.(...args); },
+        onBodySent(chunk) { setTimer(writeTimeout, 'write'); handler.onBodySent?.(chunk); },
+        onRequestSent() { setTimer(timeout); handler.onRequestSent?.(); },
+      }));
+      // The injected fetch seam has no transport callbacks; it still receives the
+      // same read deadline and cancellation signal as the production transport.
+      if (this.injectedFetch) setTimer(timeout);
       try {
         const payload = {
           model: input.model || process.env.BIBLER_SERVER_OLLAMA_MODEL?.trim() || 'bigwest60/bible-scholar:latest',
@@ -52,7 +73,8 @@ export class OllamaClient implements Chat {
           ...(input.format ? { format: input.format } : {}),
           options: { num_ctx: integerEnv('BIBLER_SERVER_OLLAMA_NUM_CTX', 131_072), ...input.options }
         };
-        const response = await this.fetcher(new URL('/api/chat', base), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: controller.signal });
+        const request: RequestInit & { dispatcher: Dispatcher } = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: controller.signal, dispatcher };
+        const response = await this.fetcher(new URL('/api/chat', base), request);
         setTimer(timeout);
         if (!response.ok) {
           let details: unknown;
@@ -94,16 +116,27 @@ export class OllamaClient implements Chat {
         return { model: String(last.model ?? payload.model), output: accumulated, raw: { model: last.model, message: { content: accumulated }, raw_last: last } };
       } catch (error) {
         if (input.signal?.aborted) return { error: 'Assistant request cancelled.' };
-        if (timeoutReached && attempt + 1 < attempts) continue;
-        if (timeoutReached) return {
+        const transportStage = transportTimeout(error);
+        if ((timeoutReached || transportStage) && timeoutReached !== 'write' && attempt + 1 < attempts) continue;
+        if (transportStage === 'connect') return { error: `Ollama connection timed out after ${openTimeout}s.`, hint: 'Increase BIBLER_SERVER_OLLAMA_OPEN_TIMEOUT or check the provider connection.' };
+        if (timeoutReached === 'write') return { error: `Ollama request write timed out after ${writeTimeout}s.`, hint: 'Increase BIBLER_SERVER_OLLAMA_WRITE_TIMEOUT or reduce the request payload.' };
+        if (timeoutReached || transportStage) return {
           error: `Ollama ${streaming ? 'stream' : 'request'} timed out after ${timeout}s (open timeout ${integerEnv('BIBLER_SERVER_OLLAMA_OPEN_TIMEOUT', 2)}s).`,
           hint: `Increase ${timeoutName} or simplify the prompt/context payload.`
         };
         return { error: `Ollama ${streaming ? 'stream' : 'request'} failed: ${error instanceof Error ? error.message : String(error)}` };
-      } finally { clearTimeout(timer!); input.signal?.removeEventListener('abort', abort); }
+      } finally { clearTimeout(timer); input.signal?.removeEventListener('abort', abort); await agent.destroy().catch(() => undefined); }
     }
     return { error: 'Ollama request failed.' };
   }
+}
+
+function transportTimeout(error: unknown, depth = 0): 'connect' | 'read' | undefined {
+  if (depth > 4) return;
+  const value = object(error);
+  if (value.code === 'UND_ERR_CONNECT_TIMEOUT') return 'connect';
+  if (value.code === 'UND_ERR_HEADERS_TIMEOUT' || value.code === 'UND_ERR_BODY_TIMEOUT') return 'read';
+  return value.cause ? transportTimeout(value.cause, depth + 1) : undefined;
 }
 
 export function camelize(value: unknown): unknown {

@@ -1,4 +1,5 @@
 import type { ErrorRequestHandler, Request } from 'express';
+import type { PageMeta } from 'bibler-core';
 
 export class ApiError extends Error {
   status: number;
@@ -40,13 +41,14 @@ export function param(req: Request, key: string): string {
 }
 export function pagination(req: Request, sortable: readonly string[], defaultSort: string) {
   const page = Math.max(1, Number.parseInt(string(req.query.page), 10) || 1);
-  const perPage = Math.min(100, Math.max(1, Number.parseInt(string(req.query.perPage), 10) || 25));
+  const requestedPerPage = Number.parseInt(string(req.query.perPage), 10);
+  const perPage = Math.min(100, requestedPerPage > 0 ? requestedPerPage : 25);
   const sort = sortable.includes(string(req.query.sort)) ? string(req.query.sort) : defaultSort;
   const direction: 'asc' | 'desc' = string(req.query.direction).toLowerCase() === 'asc' ? 'asc' : 'desc';
   const q = string(req.query.q).trim();
   return { page, perPage, sort, direction, q, skip: (page - 1) * perPage };
 }
-export function meta(p: ReturnType<typeof pagination>, totalCount: number) {
+export function meta(p: ReturnType<typeof pagination>, totalCount: number): PageMeta {
   return { page: p.page, perPage: p.perPage, totalCount, totalPages: Math.ceil(totalCount / p.perPage), sort: p.sort, direction: p.direction, q: p.q };
 }
 

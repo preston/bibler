@@ -26,6 +26,13 @@ export async function importBibles(basePath: string, selected?: Set<string>): Pr
   const manifest = await readFile(join(basePath, 'docs/main_readme/translation_list.md'), 'utf8');
   const translations = [...manifest.matchAll(/^-\s+\*\*(\w+)\s+\(([^)]+)\)\*\*:\s+(.+)$/gm)];
   if (!translations.length) throw new Error('Translation manifest contains no translations.');
+  // Reject mistyped selections before importing any of the other requested translations.
+  if (selected) {
+    const known = new Set(translations.map(entry => entry[1]!));
+    for (const abbreviation of selected) {
+      if (!known.has(abbreviation)) throw new Error(`Unknown translation: ${abbreviation}`);
+    }
+  }
   const pool = new Pool({ connectionString: databaseUrl });
   try {
     for (const entry of translations) {
@@ -74,9 +81,6 @@ export async function importBibles(basePath: string, selected?: Set<string>): Pr
       }
       await flush();
       console.log(`${abbreviation}: ${books.size} books, ${count} verses`);
-    }
-    if (selected) for (const abbreviation of selected) {
-      if (!translations.some(t => t[1] === abbreviation)) throw new Error(`Unknown translation: ${abbreviation}`);
     }
   } finally { await pool.end(); }
 }

@@ -1,6 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import type { Prisma } from '@prisma/client';
+import type { SessionResponse } from 'bibler-core';
 import { Router } from 'express';
 import { prisma } from '../db/prisma.ts';
 import { ApiError, body, meta, notFound, pagination, param, present, string, truthy, validation } from '../http.ts';
@@ -8,7 +9,8 @@ import { permissionsFor, requirePermission, requireUser, rolesFor, type RoleReco
 import { bibleJson, roleJson, userJson } from '../services/serializers.ts';
 
 const token = () => randomBytes(24).toString('base64url');
-async function sessionJson(user: UserRecord) {
+async function sessionJson(user: UserRecord): Promise<SessionResponse> {
+  if (!user.apiToken) throw new ApiError(401, 'Authentication required.');
   const roles = await rolesFor(user.id);
   return { token: user.apiToken, user: { id: user.id, username: user.username, email: user.email, name: user.name }, roles: roles.map(roleJson), permissions: permissionsFor(roles) };
 }

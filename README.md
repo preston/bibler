@@ -26,9 +26,11 @@ The UI opens at [localhost:4200](http://localhost:4200), the API at [localhost:3
 
 `BIBLER_SERVER_URL` is the browser-visible server origin, without `/api`; the UI defaults to `http://localhost:3000`. `npm run start:ui` and `npm run build:ui` generate runtime configuration and copy the PDF worker into assets. Containers substitute the server origin when nginx starts, so the same UI image supports different API deployments.
 
+The UI resolves `bibler-core` directly from shared source, so `ng serve` rebuilds when files in `core/src/` change. No separate core watcher is required for UI development.
+
 ## Configuration and content
 
-Copy `server/.env.example` for host processes and optionally `.env.example` to `.env` for Compose overrides. Server commands load `server/.env`. Compose supplies container DNS for PostgreSQL and a browser-visible UI server origin; it can also read optional server settings from `server/.env`.
+Copy `server/.env.example` for host processes and optionally `.env.example` to `.env` for Compose overrides. Server commands load `server/.env`. Compose supplies container DNS for PostgreSQL and a browser-visible UI server origin; it can also read optional server settings from `server/.env`. For the full container stack, set `BIBLER_SERVER_OLLAMA_URL` in the root `.env` or invoking shell; Compose explicitly sets this value and overrides the URL in `server/.env`. Its container default is `http://host.docker.internal:11434`. Other provider settings, including `BIBLER_SERVER_OLLAMA_MODEL`, may remain in `server/.env`.
 
 | Setting | Purpose |
 | --- | --- |

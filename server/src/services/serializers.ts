@@ -1,4 +1,5 @@
 import type { Response } from 'express';
+import type { SessionRole } from 'bibler-core';
 import { prisma } from '../db/prisma.ts';
 import { collaboration, type StudyAccess, type SermonAccess, type RoleRecord } from '../auth/access.ts';
 
@@ -9,8 +10,8 @@ export function pick(row: object, fields: readonly string[]): Record<string, unk
 export function resource(row: object & { id: string }, fields: readonly string[]): Record<string, unknown> & { uuid: string } {
   return { uuid: row.id, ...pick(row, fields), ...pick(row, ['createdAt', 'updatedAt']) };
 }
-export function roleJson(role: RoleRecord) {
-  return { ...pick(role, ['id', 'name', 'administrator', 'bibles', 'access', 'curation']), default: role.isDefault };
+export function roleJson(role: RoleRecord): SessionRole {
+  return { id: role.id, name: role.name, administrator: role.administrator, bibles: role.bibles, access: role.access, curation: role.curation, default: role.isDefault };
 }
 export const userJson = (user: object) => pick(user, ['id', 'username', 'email', 'name', 'createdAt', 'updatedAt']);
 export const bibleJson = (bible: object & { id: string }) => ({ id: bible.id, ...resource(bible, ['name', 'abbreviation', 'language', 'license', 'aiDefaultEnglish', 'aiDefaultHebrewOt', 'aiDefaultGreek', 'aiDefaultAramaic']) });

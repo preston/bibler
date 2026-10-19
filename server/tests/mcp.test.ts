@@ -28,7 +28,8 @@ const decode = (result: Awaited<ReturnType<typeof callTool>>) => JSON.parse(resu
 test('MCP exposes the same seven tools, order, definitions and snake_case names', () => {
   assert.deepEqual(toolDefinitions.map(t => t.name), ['search_verses', 'get_verse', 'get_chapter', 'list_books', 'list_bibles', 'get_book_info', 'list_languages']);
   assert.deepEqual(toolDefinitions[1]!.inputSchema.required, ['bible', 'book', 'chapter', 'verse']);
-  assert.equal(searchTerms("God's love"), 'God:* | s:* | love:*');
+  assert.equal(searchTerms("God's love"), "' God s ':* | ' love ':*");
+  assert.equal(searchTerms('  God-ward\tfaith  '), "' God-ward ':* | ' faith ':*");
 });
 test('all seven MCP tools return database text with unchanged argument/result casing', async () => {
   const db = mockDb();

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { prisma } from '../db/prisma.ts';
 import { notFound, param, string } from '../http.ts';
 import { bibleJson, bookJson } from '../services/serializers.ts';
+import { searchTerms } from '../services/search.ts';
 
 export function createScriptureRouter() {
   const router = Router();
@@ -43,10 +44,8 @@ export function createScriptureRouter() {
     const bibleId = param(req, 'bible');
     if (!await prisma.bible.findUnique({ where: { id: bibleId } })) notFound('Bible');
     const text = string(req.body?.text || req.query.text).trim();
-    // Prefix/OR matching mirrors the PostgreSQL simple tsearch configuration used by the existing search index.
-    const tokens = text.match(/[\p{L}\p{N}]+/gu) ?? [];
-    if (!tokens.length) { res.json([]); return; }
-    const query = tokens.map((t) => `${t}:*`).join(' | ');
+    const query = searchTerms(text);
+    if (!query) { res.json([]); return; }
     const ids = await prisma.$queryRaw<Array<{ id: string }>>`SELECT id FROM verses WHERE bible_id = ${bibleId}::uuid AND to_tsvector('simple', COALESCE(text, '')) @@ to_tsquery('simple', ${query}) ORDER BY ts_rank(to_tsvector('simple', COALESCE(text, '')), to_tsquery('simple', ${query})) DESC, id ASC LIMIT 100`;
     const rows = await prisma.verse.findMany({ where: { id: { in: ids.map((r) => r.id) } } });
     const byId = new Map(rows.map((r) => [r.id, r]));

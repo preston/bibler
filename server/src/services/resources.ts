@@ -54,7 +54,13 @@ export async function validateResource(config: ResourceConfig, input: Record<str
   }
   for (const key of config.required) if (!present(data[key])) errors.push(`${key} can't be blank.`);
   for (const [key, choices] of Object.entries(config.enums ?? {})) if (!choices.includes(string(data[key]))) errors.push(`${key} is not included in the list.`);
-  if (data.position !== undefined) {
+  if (data.position === null && previous) {
+    // The plan-item callback resets a cleared position to zero; other resource updates reject it.
+    if (config.kind === 'planItem') data.position = 0;
+    else errors.push('Position must be a nonnegative integer.');
+  }
+  // On create, leave null unset so the parent route appends the resource after the last position.
+  if (data.position != null) {
     data.position = Number(data.position);
     // Plan positions historically allow any integer; all other ordered resources require nonnegative positions.
     if (!Number.isInteger(data.position) || (config.kind !== 'planItem' && Number(data.position) < 0)) errors.push('Position must be a nonnegative integer.');

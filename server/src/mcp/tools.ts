@@ -1,15 +1,14 @@
 import { prisma } from '../db/prisma.ts';
 import { languageNames } from './languages.ts';
 import { toolDefinitions } from './definitions.ts';
+import { searchTerms } from '../services/search.ts';
 export { toolDefinitions };
+export { searchTerms };
 export class ToolError extends Error { readonly code: number; constructor(message: string, code: number) { super(message); this.code = code; } }
 type Args = Record<string, unknown>;
 export const validUuid = (value: unknown): boolean => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value ?? ''));
 const absent = (value: unknown) => value === null || value === undefined || value === false || (typeof value === 'string' && !value.trim());
 const content = (value: unknown) => ({ content: [{ type: 'text', text: JSON.stringify(value, null, 2) }] });
-export function searchTerms(query: string): string {
-  return (query.normalize('NFC').match(/[\p{L}\p{N}]+/gu) ?? []).map(term => `${term}:*`).join(' | ');
-}
 export async function callTool(name: string, args: Args, db = prisma): Promise<ReturnType<typeof content>> {
   const definition = toolDefinitions.find(tool => tool.name === name);
   if (!definition) throw new ToolError(`Unknown tool: ${name}`, -32602);
@@ -42,7 +41,8 @@ export async function callTool(name: string, args: Args, db = prisma): Promise<R
     const rows = await db.$queryRaw<Array<{ text: string | null; chapter: number; ordinal: number; name: string }>>`
       SELECT v.text, v.chapter, v.ordinal, b.name FROM verses v JOIN books b ON b.id = v.book_id
       WHERE v.bible_id = ${bible.id}::uuid AND to_tsvector('simple', coalesce(v.text, '')) @@ to_tsquery('simple', ${query})
-      ORDER BY v.book_id ASC, v.chapter ASC, v.ordinal ASC LIMIT ${limit}`;
+      ORDER BY ts_rank(to_tsvector('simple', coalesce(v.text, '')), to_tsquery('simple', ${query})) DESC,
+        v.id ASC, v.book_id ASC, v.chapter ASC, v.ordinal ASC LIMIT ${limit}`;
     return content(rows.map(v => ({ reference: `${v.name} ${v.chapter}:${v.ordinal}`, text: v.text, book: v.name, chapter: v.chapter, verse: v.ordinal, bible: bible.name })));
   }
   if (!validUuid(args.book)) throw new ToolError(`Book not found: ${String(args.book)}`, -32001);

@@ -270,3 +270,29 @@ test('document text is stored exactly, previews are bounded, and access stays ow
   await api(path, 'DELETE', undefined, 'participant', 403);
   await api(path, 'DELETE', undefined, 'administrator', 204);
 });
+
+
+test('pagination defaults nonpositive page sizes to 25 for every paged collection', { skip: !base }, async () => {
+  for (const path of ['/api/studies', '/api/sermons', '/api/system/users', '/api/system/settings/ai-defaults']) {
+    for (const [requested, expected] of [[-5, 25], [0, 25], [1, 1], [101, 100]]) {
+      const result = object(await api(`${path}?perPage=${requested}`, 'GET', undefined, 'administrator'));
+      assert.equal(object(result.meta).perPage, expected, path);
+    }
+  }
+});
+
+test('cleared resource positions append on create and preserve each update callback', { skip: !base }, async () => {
+  const study = item(await api('/api/studies', 'POST', { study: { title: 'Position callbacks' } }, 'owner', 201), 'study');
+  const path = `/api/studies/${uuid(study)}`;
+  await api(`${path}/questions`, 'POST', { studyQuestion: { prompt: 'First question', position: 3 } }, 'owner', 201);
+  const question = item(await api(`${path}/questions`, 'POST', { studyQuestion: { prompt: 'Appended question', position: null } }, 'owner', 201), 'question');
+  assert.equal(question.position, 4);
+  await api(`${path}/questions/${uuid(question)}`, 'PATCH', { studyQuestion: { position: null } }, 'owner', 422);
+  assert.equal(item(await api(`${path}/questions/${uuid(question)}`, 'GET', undefined, 'owner'), 'question').position, 4);
+  await api(`${path}/plan-items`, 'POST', { studyPlanItem: { title: 'First step', itemType: 'custom', position: 7 } }, 'owner', 201);
+  const plan = item(await api(`${path}/plan-items`, 'POST', { studyPlanItem: { title: 'Appended step', itemType: 'custom', position: null } }, 'owner', 201), 'planItem');
+  assert.equal(plan.position, 8);
+  const reset = item(await api(`${path}/plan-items/${uuid(plan)}`, 'PATCH', { studyPlanItem: { position: null } }, 'owner'), 'planItem');
+  assert.equal(reset.position, 0);
+  await api(path, 'DELETE', undefined, 'owner', 204);
+});
