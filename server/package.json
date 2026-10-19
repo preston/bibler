@@ -23,22 +23,22 @@
     "db:catalog": "node --env-file-if-exists=.env src/db/snapshot.ts"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "~7.10.0",
-    "@prisma/client": "~7.10.0",
-    "bcryptjs": "^3.0.2",
+    "@prisma/adapter-pg": "~7.10.1",
+    "@prisma/client": "~7.10.1",
+    "bcryptjs": "^3.0.3",
     "bibler-core": "file:../core",
     "cors": "^2.8.6",
     "csv-parse": "^7.0.3",
     "express": "^5.3.0",
     "pg": "^8.23.1",
-    "prisma": "~7.10.0",
+    "prisma": "~7.10.1",
     "undici": "^8.12.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.5",
-    "@types/pg": "^8.15.5",
+    "@types/pg": "^8.23.1",
     "typescript": "~6.0.0"
   }
 }
