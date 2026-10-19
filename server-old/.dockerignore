@@ -1,0 +1,11 @@
+.cursor
+.dockerignore
+.drone.yml
+.git
+.gitignore
+.gitmodules
+.rubocop.yml
+
+Dockerfile
+log
+README.md

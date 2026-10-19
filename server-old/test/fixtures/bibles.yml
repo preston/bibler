@@ -1,0 +1,24 @@
+# frozen_string_literal: true
+
+test1:
+  id: 00000000-0000-0000-0000-000000000101
+  name: Test Bible 1
+  abbreviation: TEST1
+  language: en
+  license: Test License
+  ai_default_english: true
+
+test_hebrew_ot:
+  id: 00000000-0000-0000-0000-000000000103
+  name: Test Hebrew OT
+  abbreviation: HTEST
+  language: hbo
+  license: Test License
+  ai_default_hebrew_ot: true
+
+test2:
+  id: 00000000-0000-0000-0000-000000000102
+  name: Test Bible 2
+  abbreviation: TEST2
+  language: en
+  license: Test License

@@ -1,0 +1,40 @@
+---
+description: Rails best practices with minimal dependencies
+alwaysApply: true
+---
+
+# Rails and Ruby Best Practices
+
+## Project Context
+
+- **Server**: API-only Rails project on PostgreSQL. Always use the latest stable versions of Ruby and Rails.
+- **Data**: Raw bible import data is from this project https://github.com/scrollmapper/bible_databases which is checked out at `../bible_databases`
+- **Frontend**: Angular with Bootstrap project with code located at `../bibler-ui`
+- **Goal**: Maintainable, simple, dependency-light codebase
+
+## Ruby/Rails Best Practices
+
+- Use Rails CLI for all operations (generate, build, serve)
+- Follow Rails style guide: controllers, models etc
+- Strongly prefer Rails OR/M usage over custom SQL statements.
+
+## Data
+- NEVER change the text or context of a bible verse
+- Always support handling of non-English data files
+
+## Minimal Dependencies
+
+- Avoid adding new gems unless absolutely necessary
+- Prefer Rails features over third-party libraries
+- Review existing dependencies before adding new ones
+- Keep `Gemfile` lean and well-documented
+
+## Maintenance Focus
+
+- Write clear, readable code over clever solutions
+- Use meaningful variable and function names
+- Keep components small and focused
+- Prefer code reusable logic over duplication
+- Document non-obvious code decisions
+- Remove dead/commented code regularly
+- Documentation should be concise, non-duplicative, and oriented towards a technical audience

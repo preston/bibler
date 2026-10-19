@@ -1,0 +1,24 @@
+Metrics/ClassLength:
+  Enabled: false
+Metrics/BlockLength:
+  Enabled: false
+  Exclude:
+    - test/**/*
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - app/**/*.jbuilder
+Layout/LineLength:
+  Enabled: false
+Lint/UselessAssignment:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
+Style/Documentation:
+  Exclude:
+    - db/migrate/**.rb

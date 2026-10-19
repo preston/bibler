@@ -1,0 +1,33 @@
+# frozen_string_literal: true
+
+verse1_test1:
+  id: 00000000-0000-0000-0000-000000000401
+  bible_id: 00000000-0000-0000-0000-000000000101
+  book_id: 00000000-0000-0000-0000-000000000201
+  chapter: 1
+  ordinal: 1
+  text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+verse2_test1:
+  id: 00000000-0000-0000-0000-000000000402
+  bible_id: 00000000-0000-0000-0000-000000000101
+  book_id: 00000000-0000-0000-0000-000000000201
+  chapter: 1
+  ordinal: 2
+  text: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+verse1_test2:
+  id: 00000000-0000-0000-0000-000000000403
+  bible_id: 00000000-0000-0000-0000-000000000102
+  book_id: 00000000-0000-0000-0000-000000000202
+  chapter: 1
+  ordinal: 1
+  text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+verse2_test2:
+  id: 00000000-0000-0000-0000-000000000404
+  bible_id: 00000000-0000-0000-0000-000000000102
+  book_id: 00000000-0000-0000-0000-000000000202
+  chapter: 1
+  ordinal: 2
+  text: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

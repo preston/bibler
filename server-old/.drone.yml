@@ -1,0 +1,82 @@
+---
+name: latest-amd64
+kind: pipeline
+type: docker
+platform:
+  arch: amd64
+  os: linux
+steps:
+  - name: publish
+    image: docker:latest
+    environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
+      DOCKER_USERNAME:
+        from_secret: docker_username
+      DOCKER_PASSWORD:
+        from_secret: docker_password
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t p3000/bibler-server:${DRONE_COMMIT_BRANCH}-linux-amd64 .
+      - docker push p3000/bibler-server:${DRONE_COMMIT_BRANCH}-linux-amd64
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+---
+name: latest-arm64
+kind: pipeline
+type: docker
+platform:
+  arch: arm64
+  os: linux
+steps:
+  - name: publish
+    image: docker:latest
+    environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
+      DOCKER_USERNAME:
+        from_secret: docker_username
+      DOCKER_PASSWORD:
+        from_secret: docker_password
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t p3000/bibler-server:${DRONE_COMMIT_BRANCH}-linux-arm64 .
+      - docker push p3000/bibler-server:${DRONE_COMMIT_BRANCH}-linux-arm64
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+---
+name: manifest
+kind: pipeline
+type: docker
+depends_on:
+  - latest-amd64
+  - latest-arm64
+steps:
+  - name: publish-manifest
+    image: plugins/manifest
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      target: p3000/bibler-server:latest
+      template: p3000/bibler-server:master-OS-ARCH
+      platforms:
+        - linux/amd64
+        - linux/arm64
+      exclude:
+        - master
+trigger:
+  branch:
+    include:
+      - master
+  status:
+    - success

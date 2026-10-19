@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id: 66666666-6666-6666-6666-666666666661
+  study_id: 11111111-1111-1111-1111-111111111111
+  instruction: Read Romans 12 aloud and identify key commands.
+  task_type: reading
+  status: open
+  assignee_label: Group A
+  due_at: 2026-05-01 00:00:00
+  context: {}
+  position: 0
+
+two:
+  id: 66666666-6666-6666-6666-666666666662
+  study_id: 22222222-2222-2222-2222-222222222222
+  instruction: Share one evangelism insight from John 3.
+  task_type: reflection
+  status: in_progress
+  assignee_label: Group B
+  due_at: 2026-05-08 00:00:00
+  context: {}
+  position: 0

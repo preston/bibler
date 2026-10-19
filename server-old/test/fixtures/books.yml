@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+genesis_test1:
+  id: 00000000-0000-0000-0000-000000000201
+  name: Genesis
+  bible_id: 00000000-0000-0000-0000-000000000101
+  testament: "old"
+  ordinal: 1
+
+genesis_test2:
+  id: 00000000-0000-0000-0000-000000000202
+  name: Genesis
+  bible_id: 00000000-0000-0000-0000-000000000102
+  testament: "old"
+  ordinal: 1
