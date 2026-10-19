@@ -1,0 +1,86 @@
+<div class="container-fluid">
+  <br>
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-xl-6">
+      <div class="card bg-light mb-3">
+        <div class="card-header"><strong>Create New Sermon</strong></div>
+        <div class="card-body">
+          @if (isSignedIn()) {
+            <div class="row g-2 align-items-end">
+              <div class="col-12 col-md">
+                <input class="form-control" [ngModel]="createTitle()" (ngModelChange)="createTitle.set($event)" placeholder="Sermon title" autofocus>
+              </div>
+              <div class="col-12 col-md-auto">
+                <button class="btn btn-success" type="button" (click)="createSermon()" [disabled]="!canCreateSermon() || loading()">Create Sermon</button>
+              </div>
+            </div>
+          } @else {
+            <a class="btn btn-primary" routerLink="/login" [queryParams]="{ returnUrl: '/sermons' }">Log in</a>
+            <span class="mb-3 text-muted"> ..to create your own sermon.</span>
+          }
+        </div>
+      </div>
+
+      @if (ownedSermons().length > 0) {
+        <div class="card border-primary h-100">
+          <div class="card-header"><strong>My sermons</strong></div>
+          <div class="card-body p-0">
+            <ul class="list-group list-group-flush">
+              @for (s of ownedSermons(); track s.uuid) {
+                <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+                  <button type="button" class="btn btn-link p-0 text-start text-truncate" (click)="openSermon(s.uuid)">{{ s.title }}</button>
+                  <span class="badge bg-secondary">{{ s.visibility }}</span>
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      }
+    </div>
+    <div class="col-12 col-xl-6">
+      <div class="card h-100">
+        <div class="card-header pb-2">
+          <div class="fw-semibold mb-2">Public sermons</div>
+          <server-table-controls
+            [query]="publicSearchDraft()"
+            (queryChange)="onPublicSearchDraftChange($event)"
+            [sort]="publicSort()"
+            (sortChange)="onPublicSortChange($event)"
+            [direction]="publicDirection()"
+            (directionChange)="onPublicDirectionChange($event)"
+            [meta]="publicSermonsMeta()"
+            (pageChange)="onPublicPageChange($event)"
+            (perPageChange)="onPublicPerPageChange($event)"
+            (search)="applyPublicSearch()"
+            [sortableColumns]="publicSermonsSortColumns"
+          />
+        </div>
+        <div class="card-body p-0">
+          <ul class="list-group list-group-flush">
+            @for (s of publicSermons(); track s.uuid) {
+              <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+                <button type="button" class="btn btn-link p-0 text-start text-truncate" (click)="openSermon(s.uuid)">{{ s.title }}</button>
+                <div class="d-inline-flex align-items-center gap-2 flex-shrink-0">
+                  <span class="text-muted small">{{ s.updated_at | date: 'short' }}</span>
+                </div>
+              </li>
+            }
+          </ul>
+          @if (publicSermons().length === 0) {
+            <div class="p-3 text-muted small">
+              @if (publicListQuery().trim()) {
+                No public sermons match your search.
+              } @else {
+                No public sermons yet.
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger mb-3">{{error()}}</div>
+  }
+</div>

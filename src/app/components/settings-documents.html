@@ -1,0 +1,68 @@
+<div>
+  <h2 class="h4 mb-3">Documents</h2>
+  <p class="text-muted small">Text extracted from your uploads (PDF, Word, etc.). Original binaries are not stored on the server.</p>
+
+  <div class="mb-3">
+    <label class="form-label small" for="doc_search">Search</label>
+    <div class="input-group">
+      <input id="doc_search" class="form-control" [ngModel]="query()" (ngModelChange)="onQueryChange($event)" placeholder="Filter by name or content…">
+      <button type="button" class="btn btn-outline-primary" (click)="applySearch()">Search</button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <p class="text-muted">Loading…</p>
+  }
+
+  <div class="table-responsive">
+    <table class="table table-sm align-middle">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Preview</th>
+          <th>Updated</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (f of list(); track f.uuid) {
+          <tr>
+            <td>{{ f.original_filename }}</td>
+            <td class="small text-muted text-truncate" style="max-width: 24rem">{{ f.extracted_text_preview ?? '—' }}</td>
+            <td class="small">{{ f.updated_at | date: 'short' }}</td>
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-danger" (click)="requestDeleteDocument(f)">Delete</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@if (pendingConfirmation(); as pending) {
+  <div
+    class="modal fade show d-block"
+    tabindex="-1"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="documentsConfirmModalTitle"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="documentsConfirmModalTitle">{{ pending.title }}</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="cancelConfirmation()"></button>
+        </div>
+        <div class="modal-body">
+          {{ pending.message }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancelConfirmation()">Cancel</button>
+          <button type="button" class="btn btn-danger" (click)="confirmPendingAction()">{{ pending.confirmLabel }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+}

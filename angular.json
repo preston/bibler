@@ -31,7 +31,12 @@
                         "inlineStyleLanguage": "scss",
                         "assets": [
                             "src/favicon.ico",
-                            "src/assets"
+                            "src/assets",
+                            {
+                                "glob": "pdf.worker.min.mjs",
+                                "input": "node_modules/pdfjs-dist/build",
+                                "output": "/"
+                            }
                         ],
                         "styles": [
                             "src/styles.scss",
@@ -100,7 +105,12 @@
                         "inlineStyleLanguage": "scss",
                         "assets": [
                             "src/favicon.ico",
-                            "src/assets"
+                            "src/assets",
+                            {
+                                "glob": "pdf.worker.min.mjs",
+                                "input": "node_modules/pdfjs-dist/build",
+                                "output": "/"
+                            }
                         ],
                         "styles": [
                             "src/styles.scss",

@@ -1,0 +1,452 @@
+<div class="container-fluid py-3 sermon-detail">
+  @if (loading()) {
+    <p class="text-muted mb-0">Loading…</p>
+  }
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  @if (sermon(); as s) {
+    <!-- Page toolbar -->
+    <div class="card shadow-sm mb-3">
+      <div class="card-body py-3">
+        <div class="d-flex flex-column flex-xl-row gap-3 align-items-stretch align-items-xl-center justify-content-between">
+          <div class="d-flex flex-wrap align-items-center gap-2 min-w-0 flex-grow-1">
+            <a routerLink="/sermons" class="btn btn-outline-secondary btn-sm flex-shrink-0" title="Back to list">
+              <span class="bi bi-arrow-left" aria-hidden="true"></span>
+              <span class="d-none d-sm-inline ms-1">Sermons</span>
+            </a>
+            @if (canEdit()) {
+              <label class="visually-hidden" for="sermon_title_input">Sermon title</label>
+              <input
+                id="sermon_title_input"
+                class="form-control form-control-lg flex-grow-1"
+                style="min-width: 10rem; max-width: 36rem"
+                [ngModel]="s.title"
+                (ngModelChange)="patchSermon({ title: $event })"
+                (blur)="saveSermonMeta()"
+                placeholder="Sermon title"
+              />
+            } @else {
+              <h1 class="h4 mb-0 text-truncate" [attr.title]="s.title">{{ s.title }}</h1>
+            }
+          </div>
+          @if (canEdit()) {
+            <div class="d-flex flex-wrap align-items-center gap-2 flex-shrink-0">
+              <div class="input-group input-group-sm" style="width: auto">
+                <label class="input-group-text mb-0" for="sermon_visibility">Visibility</label>
+                <select
+                  id="sermon_visibility"
+                  class="form-select"
+                  style="width: auto; min-width: 7.5rem"
+                  [ngModel]="s.visibility"
+                  (ngModelChange)="patchSermon({ visibility: $event }); saveSermonMeta()"
+                >
+                  <option value="private">Private</option>
+                  <option value="sharable">Sharable</option>
+                  <option value="public">Public</option>
+                </select>
+              </div>
+              <div class="input-group input-group-sm" style="width: auto">
+                <label class="input-group-text mb-0" for="sermon_target_min">Target (min)</label>
+                <input
+                  id="sermon_target_min"
+                  type="number"
+                  min="0"
+                  class="form-control"
+                  style="width: 4.5rem"
+                  [ngModel]="s.target_duration_minutes ?? null"
+                  (ngModelChange)="patchSermon({ target_duration_minutes: $event === null || $event === '' ? null : +$event }); saveSermonMeta()"
+                />
+              </div>
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1"
+                title="Delete this sermon permanently"
+                (click)="deleteSermon()"
+              >
+                <span class="bi bi-trash" aria-hidden="true"></span>
+                <span>Delete sermon</span>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 align-items-start">
+      <!-- Sidebar: AI first, then outline (sticky stack on large screens) -->
+      <div class="col-lg-4 col-xl-3 order-lg-1">
+        <div class="d-flex flex-column gap-3 sticky-lg-top sermon-detail-sidebar" style="top: 0.75rem; z-index: 2">
+          <div class="card shadow-sm bg-success-subtle border-success-subtle">
+            <div class="card-header d-flex align-items-center gap-2 py-2">
+              <span class="bi bi-stars text-success" aria-hidden="true"></span>
+              <span class="fw-semibold">Sermon AI assistant</span>
+            </div>
+            <div class="card-body" style="max-height: min(70vh, 44rem); overflow-y: auto">
+              <label class="form-label small fw-medium mb-1" for="ai_msg">What should this sermon do?</label>
+              <textarea
+                id="ai_msg"
+                class="form-control form-control-sm mb-3"
+                rows="4"
+                [ngModel]="aiMessage()"
+                (ngModelChange)="aiMessage.set($event)"
+                placeholder="Theme, audience, length…"
+              ></textarea>
+
+              <label class="form-label small fw-medium mb-1">Attach documents</label>
+              <p class="small text-muted mb-2">PDF, Word, text, Markdown, RTF — extracted in your browser; saved as documents you can reuse.</p>
+              <input
+                type="file"
+                class="form-control form-control-sm mb-3"
+                multiple
+                accept=".pdf,.docx,.txt,.md,.rtf,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,text/markdown,application/rtf,text/rtf"
+                (change)="onAttachDocuments($event)"
+              />
+              @if (attachWarn()) {
+                <div class="alert alert-warning small mb-3 py-2">{{ attachWarn() }}</div>
+              }
+
+              <label class="form-label small fw-medium mb-1" for="doc_search_q">Search your documents</label>
+              <input
+                id="doc_search_q"
+                class="form-control form-control-sm mb-2"
+                [ngModel]="documentSearchQuery()"
+                (ngModelChange)="documentSearchQuery.set($event)"
+                placeholder="Type 2+ characters…"
+              />
+              @if (documentSearchMatches().length > 0) {
+                <ul class="list-group list-group-flush border rounded small mb-3" style="max-height: 10rem; overflow-y: auto">
+                  @for (f of documentSearchMatches(); track f.uuid) {
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-2">
+                      <span class="text-truncate me-1 small">{{ f.original_filename }}</span>
+                      <button type="button" class="btn btn-sm btn-outline-primary py-0" (click)="addLibraryDocumentToAi(f)">Use</button>
+                    </li>
+                  }
+                </ul>
+              }
+
+              @if (aiDocumentUuids().length > 0) {
+                <div class="mb-3">
+                  <span class="small fw-medium">For next AI step:</span>
+                  <div class="d-flex flex-column gap-1 mt-1">
+                    @for (id of aiDocumentUuids(); track id) {
+                      <span class="badge bg-secondary d-inline-flex align-items-center justify-content-between gap-1 py-2 px-2 text-wrap text-start">
+                        <span class="small text-truncate" [title]="id">{{ id.slice(0, 10) }}…</span>
+                        <button
+                          type="button"
+                          class="btn-close btn-close-white btn-sm flex-shrink-0"
+                          [attr.aria-label]="'Remove document ' + id"
+                          (click)="removeAiDocumentUuid(id)"
+                        ></button>
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (aiError()) {
+                <div class="alert alert-warning small py-2 mb-3">{{ aiError() }}</div>
+              }
+
+              <div class="d-grid gap-2 mb-2">
+                <button type="button" class="btn btn-sm btn-primary" [disabled]="versePassLoading() || !canEdit()" (click)="runVersePass()">
+                  @if (versePassLoading()) {
+                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                  }
+                  Step 1 — Section Outside &amp; Key Verses
+                </button>
+                <button type="button" class="btn btn-sm btn-success" [disabled]="outlinePassLoading() || !canEdit()" (click)="runOutlinePass()">
+                  @if (outlinePassLoading()) {
+                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                  }
+                  Step 2 — Draft Section Content
+                </button>
+              </div>
+              <p class="small text-muted mb-0">
+                After Round 1, review sections, verses, and timings; then Round 2 for draft content. If you set a sermon target duration above, Round 1 and Round 2 aim for section times that sum to it.
+              </p>
+            </div>
+          </div>
+
+          <div class="card border-primary shadow-sm">
+            <div class="card-header bg-primary-subtle d-flex justify-content-between align-items-center flex-wrap gap-2 py-2">
+              <span class="fw-semibold">Sections</span>
+              @if (canEdit()) {
+                <button type="button" class="btn btn-sm btn-primary" (click)="addSection()">
+                  <span class="bi bi-plus-lg me-1" aria-hidden="true"></span>
+                  Add
+                </button>
+              }
+            </div>
+            @if (sections().length > 0) {
+              <p class="small text-muted px-3 pt-2 mb-0 border-bottom">
+                Per-section target minutes come from <strong>Round 1</strong> and <strong>Round 2</strong> (refined with draft content), or set them in the section editor.
+              </p>
+            }
+            <div class="list-group list-group-flush">
+              @for (sec of sections(); track sec.uuid) {
+                <div
+                  class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 px-3"
+                  [class.active]="selectedSectionUuid() === sec.uuid"
+                  role="button"
+                  tabindex="0"
+                  (click)="selectSection(sec.uuid)"
+                  (keydown.enter)="selectSection(sec.uuid)"
+                >
+                  <span class="text-truncate flex-grow-1 text-start">{{ sec.title || 'Untitled section' }}</span>
+                  @if (sectionDisplayMinutes(sec); as sm) {
+                    <small class="text-body-secondary flex-shrink-0">{{ formatMinutesLabel(sm) }}</small>
+                  }
+                  @if (canEdit()) {
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger flex-shrink-0"
+                      title="Delete this section"
+                      aria-label="Delete section"
+                      (click)="deleteSection(sec, $event)"
+                    >
+                      <span class="bi bi-trash" aria-hidden="true"></span>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+            @if (sections().length > 0) {
+              <div class="px-3 pb-2 pt-2 small text-muted border-top">
+                <div>Total: {{ totalSectionEstimatedMinutes() }}m</div>
+                @if (sermon(); as sm) {
+                  @if (sm.target_duration_minutes != null && sm.target_duration_minutes > 0) {
+                    @let delta = durationDeltaVsSermonTarget();
+                    <div>Sermon target: {{ formatMinutesLabel(sm.target_duration_minutes) }}</div>
+                    @if (delta !== null) {
+                      @if (delta === 0) {
+                        <div class="text-body-secondary">Matches sermon target.</div>
+                      } @else if (delta > 0) {
+                        <div>{{ delta }}m under target</div>
+                      } @else {
+                        <div>{{ -delta }}m over target</div>
+                      }
+                    }
+                  }
+                }
+              </div>
+            }
+            @if (canEdit() && sections().length > 0) {
+              <div class="card-body border-top py-2 pt-3">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger w-100 d-inline-flex align-items-center justify-content-center gap-1"
+                  [disabled]="removingAllSections()"
+                  (click)="removeAllSections()"
+                >
+                  @if (removingAllSections()) {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  } @else {
+                    <span class="bi bi-trash" aria-hidden="true"></span>
+                  }
+                  <span>Remove all sections</span>
+                </button>
+              </div>
+            }
+            @if (sections().length === 0) {
+              <div class="card-body small text-muted">No sections yet. Use <strong>Add</strong> or <strong>Round 1</strong> in the assistant above.</div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Main workspace -->
+      <div class="col-lg-8 col-xl-9 order-lg-2">
+        @if (selectedSection(); as sec) {
+          <div class="card shadow-sm mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2 py-2">
+              <span class="fw-semibold">Section content</span>
+              @if (canEdit()) {
+                <button type="button" class="btn btn-sm btn-primary" (click)="saveSectionBody()">
+                  <span class="bi bi-floppy me-1" aria-hidden="true"></span>
+                  Save
+                </button>
+              }
+            </div>
+            <div class="card-body">
+              @if (canEdit()) {
+                <label class="form-label small text-muted mb-1" for="sec_title">Heading</label>
+                <input id="sec_title" class="form-control mb-3" [ngModel]="sec.title" (ngModelChange)="onSectionTitleChange($event)" />
+                <label class="form-label small text-muted mb-1" for="sec_est_min">Target duration (minutes)</label>
+                <input
+                  id="sec_est_min"
+                  type="number"
+                  min="0"
+                  step="1"
+                  class="form-control mb-1"
+                  style="max-width: 8rem"
+                  [ngModel]="sec.estimated_minutes ?? null"
+                  (ngModelChange)="onSectionEstimatedMinutesChange($event)"
+                  placeholder="Optional"
+                />
+                <p class="form-text small mb-3">Section timings should add up to the sermon target (toolbar). Use 0 or blank for unspecified.</p>
+                <label class="form-label small text-muted mb-1" for="sec_body">Spoken content</label>
+                <p class="small text-muted mb-2">About one long paragraph per minute of preaching.</p>
+                <textarea
+                  id="sec_body"
+                  class="form-control"
+                  rows="10"
+                  [ngModel]="sec.body ?? ''"
+                  (ngModelChange)="onSectionBodyChange($event)"
+                  placeholder="Write or refine content here…"
+                ></textarea>
+              } @else {
+                <h2 class="h5">{{ sec.title }}</h2>
+                @if (sectionDisplayMinutes(sec); as sm) {
+                  <p class="small text-muted mb-2">Target duration: {{ formatMinutesLabel(sm) }}</p>
+                }
+                <div class="sermon-body border rounded p-3 bg-light" style="white-space: pre-wrap">{{ sec.body }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="card shadow-sm mb-3">
+            <div class="card-header py-2 fw-semibold">Scripture in this section</div>
+            <div class="card-body p-0">
+              @if (sec.sermon_section_verses.length === 0) {
+                <p class="text-muted small mb-0 px-3 py-3">No verses yet. Use the Bible browser below or <strong>Round 1</strong> in the sidebar assistant.</p>
+              } @else {
+                <ul class="list-group list-group-flush">
+                  @for (sv of sec.sermon_section_verses; track sv.uuid) {
+                    <li class="list-group-item">
+                      <div class="d-flex flex-column flex-md-row gap-2 justify-content-between align-items-start">
+                        <div class="flex-grow-1 min-w-0">
+                          <div class="mb-1">{{ sv.verse_text }}</div>
+                          <div class="small text-muted">{{ bookLabel(sv.book_uuid) }} {{ sv.chapter }}:{{ sv.ordinal }}</div>
+                        </div>
+                        <div class="d-flex flex-wrap align-items-center gap-2 flex-shrink-0">
+                          <div class="btn-group btn-group-sm">
+                            <a
+                              class="btn btn-outline-secondary"
+                              [href]="readerDeepLink(sv)"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Open in Reader"
+                            >
+                              <span class="bi bi-book"></span>
+                            </a>
+                            <a
+                              class="btn btn-outline-secondary"
+                              [href]="comparatorDeepLink(sv)"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Open in Comparator"
+                            >
+                              <span class="bi bi-columns-gap"></span>
+                            </a>
+                          </div>
+                          @if (canEdit()) {
+                            <button
+                              type="button"
+                              class="btn btn-sm btn-outline-danger"
+                              title="Remove verse from this section"
+                              (click)="deleteSectionVerse(sv)"
+                            >
+                              <span class="bi bi-trash me-1" aria-hidden="true"></span>
+                              Remove
+                            </button>
+                          }
+                        </div>
+                      </div>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          </div>
+
+          @if (canEdit()) {
+            <div class="card shadow-sm mb-3">
+              <div class="card-header py-2 fw-semibold">Browse Bible — add to this section</div>
+              <div class="card-body">
+                <div class="row g-2 mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Translation</label>
+                    <select class="form-select form-select-sm" [ngModel]="selectedBibleUuid()" (ngModelChange)="selectBible($event)">
+                      @for (b of bibles(); track b.uuid) {
+                        <option [value]="b.uuid">{{ b.name }}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Book</label>
+                    <select class="form-select form-select-sm" [ngModel]="selectedBookUuid()" (ngModelChange)="selectBook($event)">
+                      @for (b of books(); track b.uuid) {
+                        <option [value]="b.uuid">{{ b.name }}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Chapter</label>
+                    <select class="form-select form-select-sm" [ngModel]="chapter()" (ngModelChange)="selectChapter(+$event)">
+                      @for (c of chapters(); track c) {
+                        <option [value]="c">{{ c }}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+                <div class="table-responsive border rounded" style="max-height: 320px">
+                  <table class="table table-sm table-hover mb-0">
+                    <thead class="table-light sticky-top">
+                      <tr>
+                        <th style="width: 3rem">#</th>
+                        <th>Text</th>
+                        <th style="width: 5rem"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (v of verses(); track v.ordinal) {
+                        <tr>
+                          <td class="text-muted">{{ v.ordinal }}</td>
+                          <td class="small">{{ v.text }}</td>
+                          <td>
+                            <button type="button" class="btn btn-sm btn-primary" (click)="addVerseFromBrowser(v)">Add</button>
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          }
+        } @else if (sections().length > 0) {
+          <div class="alert alert-light border">Select a section in the sidebar to edit.</div>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+@if (pendingConfirmation(); as pending) {
+  <div
+    class="modal fade show d-block"
+    tabindex="-1"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="sermonConfirmModalTitle"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="sermonConfirmModalTitle">{{ pending.title }}</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="cancelConfirmation()"></button>
+        </div>
+        <div class="modal-body">
+          {{ pending.message }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancelConfirmation()">Cancel</button>
+          <button type="button" class="btn btn-danger" (click)="confirmPendingAction()">{{ pending.confirmLabel }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+}

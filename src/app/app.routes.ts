@@ -21,6 +21,14 @@ export const routes: Routes = [
     canActivate: [guestOnlyRoute]
   },
   {
+    path: 'sermons',
+    loadComponent: () => import('./components/sermons-list.component').then((m) => m.SermonsListComponent)
+  },
+  {
+    path: 'sermons/:uuid',
+    loadComponent: () => import('./components/sermon-detail.component').then((m) => m.SermonDetailComponent)
+  },
+  {
     path: 'studies',
     loadComponent: () => import('./components/studies-list.component').then((m) => m.StudiesListComponent)
   },
@@ -103,6 +111,17 @@ export const routes: Routes = [
         path: 'ai',
         loadComponent: () => import('./components/settings-ai.component').then((m) => m.SettingsAiComponent),
         canActivate: [requireSignedInRoute, requireBiblesRoute]
+      },
+      {
+        path: 'documents',
+        loadComponent: () =>
+          import('./components/settings-documents.component').then((m) => m.SettingsDocumentsComponent),
+        canActivate: [requireSignedInRoute]
+      },
+      {
+        path: 'library',
+        redirectTo: 'documents',
+        pathMatch: 'full'
       },
       {
         path: 'studies',
