@@ -24,12 +24,12 @@ export class SermonsListComponent implements OnInit {
   publicPage = signal(1);
   publicSearchDraft = signal('');
   publicListQuery = signal('');
-  publicSort = signal('updated_at');
+  publicSort = signal('updatedAt');
   publicDirection = signal<SortDirection>('desc');
   publicPerPage = signal(25);
   readonly publicSermonsSortColumns = [
-    { label: 'Updated', value: 'updated_at' },
-    { label: 'Created', value: 'created_at' },
+    { label: 'Updated', value: 'updatedAt' },
+    { label: 'Created', value: 'createdAt' },
     { label: 'Title', value: 'title' },
     { label: 'Visibility', value: 'visibility' }
   ];
@@ -81,7 +81,7 @@ export class SermonsListComponent implements OnInit {
         sort: this.publicSort(),
         direction: this.publicDirection(),
         page: this.publicPage(),
-        per_page: this.publicPerPage(),
+        perPage: this.publicPerPage(),
         ...(q ? { q } : {})
       })
       .subscribe({
@@ -92,7 +92,7 @@ export class SermonsListComponent implements OnInit {
           if (m) {
             if (m.sort) this.publicSort.set(m.sort);
             if (m.direction) this.publicDirection.set(m.direction);
-            if (m.per_page) this.publicPerPage.set(m.per_page);
+            if (m.perPage) this.publicPerPage.set(m.perPage);
             if (m.page) this.publicPage.set(m.page);
             if (m.q !== undefined) this.publicListQuery.set(m.q);
           }

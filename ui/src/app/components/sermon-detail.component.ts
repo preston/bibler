@@ -125,7 +125,7 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
 
   /** Positive minutes for display and summing; null if unset or not positive. */
   sectionDisplayMinutes(sec: SermonSection): number | null {
-    return this.normalizedEstimatedMinutes(sec.estimated_minutes);
+    return this.normalizedEstimatedMinutes(sec.estimatedMinutes);
   }
 
   formatMinutesLabel(minutes: number | null | undefined): string {
@@ -135,7 +135,7 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
 
   /** When sermon has a target, difference (target − total); positive = under, negative = over. */
   durationDeltaVsSermonTarget(): number | null {
-    const t = this.sermon()?.target_duration_minutes;
+    const t = this.sermon()?.targetDurationMinutes;
     const target = typeof t === 'number' && Number.isFinite(t) && t > 0 ? t : null;
     if (target === null) return null;
     return target - this.totalSectionEstimatedMinutes();
@@ -180,7 +180,7 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
     if (!id) return;
     this.sermonsService.sections(id).subscribe({
       next: (r) => {
-        const list = r.sermon_sections ?? [];
+        const list = r.sermonSections ?? [];
         this.sections.set(list);
         const sel = this.selectedSectionUuid();
         const stillThere = !!(sel && list.some((x) => x.uuid === sel));
@@ -198,8 +198,8 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
 
   readerDeepLink(sv: SermonSectionVerse): string {
     const params = new URLSearchParams({
-      bible: sv.bible_uuid,
-      book: sv.book_uuid,
+      bible: sv.bibleUuid,
+      book: sv.bookUuid,
       chapter: String(sv.chapter),
       verse: String(sv.ordinal)
     });
@@ -208,8 +208,8 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
 
   comparatorDeepLink(sv: SermonSectionVerse): string {
     const params = new URLSearchParams({
-      bible: sv.bible_uuid,
-      book: sv.book_uuid,
+      bible: sv.bibleUuid,
+      book: sv.bookUuid,
       chapter: String(sv.chapter),
       verse: String(sv.ordinal)
     });
@@ -225,9 +225,9 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
     const sermonId = this.sermonUuid();
     if (!sid || !sermonId || !this.canEdit()) return;
     const sec = this.selectedSection();
-    const pos = sec?.sermon_section_verses?.length ?? 0;
+    const pos = sec?.sermonSectionVerses?.length ?? 0;
     this.sermonsService
-      .createSectionVerse(sermonId, sid, { verse_uuid: v.uuid, position: pos })
+      .createSectionVerse(sermonId, sid, { verseUuid: v.uuid, position: pos })
       .subscribe({
         next: () => {
           this.toast.success('Verse added.');
@@ -352,7 +352,7 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
       .updateSection(sermonId, sec.uuid, {
         body: sec.body ?? '',
         title: sec.title,
-        estimated_minutes: sec.estimated_minutes ?? undefined
+        estimatedMinutes: sec.estimatedMinutes ?? undefined
       })
       .subscribe({
         next: () => this.toast.success('Saved.'),
@@ -368,7 +368,7 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
       .update(id, {
         title: s.title,
         visibility: s.visibility,
-        target_duration_minutes: s.target_duration_minutes ?? undefined
+        targetDurationMinutes: s.targetDurationMinutes ?? undefined
       })
       .subscribe({
         next: (r) => {
@@ -409,7 +409,7 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
       return;
     }
     const name = files.length === 1 ? files[0].name : `batch-${files.length}-documents.txt`;
-    this.documentsService.create({ original_filename: name, extracted_text: combined }).subscribe({
+    this.documentsService.create({ originalFilename: name, extractedText: combined }).subscribe({
       next: (r) => {
         this.aiDocumentUuids.update((xs) => [...xs, r.document.uuid]);
         this.toast.success('Document saved.');
@@ -434,13 +434,13 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
     if (!id || !this.canEdit()) return;
     this.versePassLoading.set(true);
     this.aiError.set('');
-    const target = this.sermon()?.target_duration_minutes;
+    const target = this.sermon()?.targetDurationMinutes;
     this.sermonsService
       .versePass(id, {
         message: this.aiMessage(),
-        document_uuids: this.aiDocumentUuids(),
-        replace_sections: true,
-        target_duration_minutes:
+        documentUuids: this.aiDocumentUuids(),
+        replaceSections: true,
+        targetDurationMinutes:
           typeof target === 'number' && Number.isFinite(target) && target > 0 ? target : undefined
       })
       .subscribe({
@@ -468,12 +468,12 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
     this.outlinePassLoading.set(true);
     this.aiError.set('');
     this.outlinePreview.set(null);
-    const target = this.sermon()?.target_duration_minutes;
+    const target = this.sermon()?.targetDurationMinutes;
     this.sermonsService
       .outlinePass(id, {
         message: this.aiMessage(),
-        document_uuids: this.aiDocumentUuids(),
-        target_duration_minutes:
+        documentUuids: this.aiDocumentUuids(),
+        targetDurationMinutes:
           typeof target === 'number' && Number.isFinite(target) && target > 0 ? target : undefined
       })
       .subscribe({
@@ -501,12 +501,12 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
   private applyOutlineSections(secs: Array<Record<string, unknown>>): void {
     const sermonId = this.sermonUuid();
     if (!sermonId) return;
-    const updates: Observable<{ sermon_section: SermonSection }>[] = [];
+    const updates: Observable<{ sermonSection: SermonSection }>[] = [];
     for (const row of secs) {
-      const suid = String(row['section_uuid'] ?? row['sectionUuid'] ?? '');
+      const suid = String(row['sectionUuid'] ?? '');
       const title = String(row['title'] ?? '');
       const body = String(row['body'] ?? '');
-      const em = row['estimated_minutes'];
+      const em = row['estimatedMinutes'];
       const parsed = typeof em === 'number' ? em : em != null ? Number(em) : NaN;
       let estimatedPatch: number | undefined = undefined;
       if (Number.isFinite(parsed)) {
@@ -518,7 +518,7 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
         this.sermonsService.updateSection(sermonId, suid, {
           title: title || undefined,
           body,
-          estimated_minutes: estimatedPatch
+          estimatedMinutes: estimatedPatch
         })
       );
     }
@@ -561,7 +561,7 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
       minutes = Number.isFinite(n) && n >= 0 ? n : null;
     }
     this.sections.update((list) =>
-      list.map((s) => (s.uuid === id ? { ...s, estimated_minutes: minutes } : s))
+      list.map((s) => (s.uuid === id ? { ...s, estimatedMinutes: minutes } : s))
     );
   }
 
@@ -579,7 +579,7 @@ export class SermonDetailComponent extends BookBasedComponent implements OnInit 
       .createSection(sermonId, { title: `Section ${pos + 1}`, body: '', position: pos })
       .subscribe({
         next: (r) => {
-          this.selectedSectionUuid.set(r.sermon_section.uuid);
+          this.selectedSectionUuid.set(r.sermonSection.uuid);
           this.reloadSections();
         },
         error: () => this.toast.danger('Could not add section.')

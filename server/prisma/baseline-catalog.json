@@ -1,0 +1,3681 @@
+{
+  "relations": [
+    {
+      "name": "bibles",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "books",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "documents",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "mcp_sessions",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "roles",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "roles_users",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "sermon_section_verses",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "sermon_sections",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "sermons",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "studies",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "study_answers",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "study_assignments",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "study_commentaries",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "study_plan_item_user_states",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "study_plan_items",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "study_questions",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "study_tasks",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "study_verses",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "users",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    },
+    {
+      "name": "verses",
+      "kind": "r",
+      "row_security": false,
+      "force_row_security": false
+    }
+  ],
+  "columns": [
+    {
+      "table_name": "bibles",
+      "name": "abbreviation",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "bibles",
+      "name": "ai_default_aramaic",
+      "type": "boolean",
+      "not_null": true,
+      "default_value": "false",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "bibles",
+      "name": "ai_default_english",
+      "type": "boolean",
+      "not_null": true,
+      "default_value": "false",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "bibles",
+      "name": "ai_default_greek",
+      "type": "boolean",
+      "not_null": true,
+      "default_value": "false",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "bibles",
+      "name": "ai_default_hebrew_ot",
+      "type": "boolean",
+      "not_null": true,
+      "default_value": "false",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "bibles",
+      "name": "created_at",
+      "type": "timestamp without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "bibles",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "bibles",
+      "name": "language",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": "''::character varying",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "bibles",
+      "name": "license",
+      "type": "text",
+      "not_null": false,
+      "default_value": "''::text",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "bibles",
+      "name": "name",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "bibles",
+      "name": "updated_at",
+      "type": "timestamp without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "books",
+      "name": "bible_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "books",
+      "name": "created_at",
+      "type": "timestamp without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "books",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "books",
+      "name": "name",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "books",
+      "name": "ordinal",
+      "type": "integer",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "books",
+      "name": "testament",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "books",
+      "name": "updated_at",
+      "type": "timestamp without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "documents",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "documents",
+      "name": "extracted_text",
+      "type": "text",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "documents",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "documents",
+      "name": "original_filename",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "documents",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "documents",
+      "name": "user_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "initialized_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "last_activity_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "last_event_id",
+      "type": "character varying",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "session_id",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "roles",
+      "name": "access",
+      "type": "boolean",
+      "not_null": true,
+      "default_value": "false",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "roles",
+      "name": "administrator",
+      "type": "boolean",
+      "not_null": true,
+      "default_value": "false",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "roles",
+      "name": "bibles",
+      "type": "boolean",
+      "not_null": true,
+      "default_value": "false",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "roles",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "roles",
+      "name": "curation",
+      "type": "boolean",
+      "not_null": true,
+      "default_value": "false",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "roles",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "roles",
+      "name": "is_default",
+      "type": "boolean",
+      "not_null": true,
+      "default_value": "false",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "roles",
+      "name": "name",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "roles",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "roles_users",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "roles_users",
+      "name": "role_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "roles_users",
+      "name": "user_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "bible_uuid",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "book_uuid",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "chapter",
+      "type": "integer",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "ordinal",
+      "type": "integer",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "position",
+      "type": "integer",
+      "not_null": true,
+      "default_value": "0",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "sermon_section_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "verse_text",
+      "type": "text",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "verse_uuid",
+      "type": "character varying",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "body",
+      "type": "text",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "estimated_minutes",
+      "type": "integer",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "position",
+      "type": "integer",
+      "not_null": true,
+      "default_value": "0",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "sermon_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "title",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": "''::character varying",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermons",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermons",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermons",
+      "name": "target_duration_minutes",
+      "type": "integer",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermons",
+      "name": "title",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "sermons",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermons",
+      "name": "user_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "sermons",
+      "name": "visibility",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": "'private'::character varying",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "studies",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "studies",
+      "name": "goal",
+      "type": "text",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "studies",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "studies",
+      "name": "owner_id",
+      "type": "uuid",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "studies",
+      "name": "title",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "studies",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "studies",
+      "name": "visibility",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": "'private'::character varying",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_answers",
+      "name": "author_label",
+      "type": "character varying",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_answers",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_answers",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_answers",
+      "name": "response",
+      "type": "text",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_answers",
+      "name": "study_commentary_id",
+      "type": "uuid",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_answers",
+      "name": "study_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_answers",
+      "name": "study_question_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_answers",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_answers",
+      "name": "user_id",
+      "type": "uuid",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_answers",
+      "name": "visibility",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": "'study'::character varying",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "study_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "user_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "body",
+      "type": "text",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "context",
+      "type": "jsonb",
+      "not_null": true,
+      "default_value": "'{}'::jsonb",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "position",
+      "type": "integer",
+      "not_null": true,
+      "default_value": "0",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "prompt",
+      "type": "text",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "source_type",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": "'manual'::character varying",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "study_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "title",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "status",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": "'todo'::character varying",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "study_plan_item_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "user_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "anchor",
+      "type": "character varying",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "duration",
+      "type": "integer",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "item_type",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "notes",
+      "type": "text",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "position",
+      "type": "integer",
+      "not_null": true,
+      "default_value": "0",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "resource_type",
+      "type": "character varying",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "resource_uuid",
+      "type": "character varying",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "study_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "title",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_questions",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_questions",
+      "name": "guidance_notes",
+      "type": "text",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_questions",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_questions",
+      "name": "position",
+      "type": "integer",
+      "not_null": true,
+      "default_value": "0",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_questions",
+      "name": "prompt",
+      "type": "text",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_questions",
+      "name": "question_type",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": "'discussion'::character varying",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_questions",
+      "name": "study_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_questions",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_questions",
+      "name": "verse_anchor",
+      "type": "jsonb",
+      "not_null": true,
+      "default_value": "'{}'::jsonb",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "assignee_label",
+      "type": "character varying",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "context",
+      "type": "jsonb",
+      "not_null": true,
+      "default_value": "'{}'::jsonb",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "due_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "instruction",
+      "type": "text",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "position",
+      "type": "integer",
+      "not_null": true,
+      "default_value": "0",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "status",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": "'open'::character varying",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "study_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "task_type",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": "'discussion'::character varying",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_verses",
+      "name": "bible_uuid",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_verses",
+      "name": "book_uuid",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_verses",
+      "name": "chapter",
+      "type": "integer",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_verses",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_verses",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_verses",
+      "name": "note",
+      "type": "text",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_verses",
+      "name": "ordinal",
+      "type": "integer",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_verses",
+      "name": "position",
+      "type": "integer",
+      "not_null": true,
+      "default_value": "0",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_verses",
+      "name": "study_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_verses",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "study_verses",
+      "name": "verse_text",
+      "type": "text",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "study_verses",
+      "name": "verse_uuid",
+      "type": "character varying",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "users",
+      "name": "api_token",
+      "type": "character varying",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "users",
+      "name": "created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "users",
+      "name": "email",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": "''::character varying",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "users",
+      "name": "encrypted_password",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": "''::character varying",
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "users",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "users",
+      "name": "name",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "users",
+      "name": "remember_created_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "users",
+      "name": "reset_password_sent_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "users",
+      "name": "reset_password_token",
+      "type": "character varying",
+      "not_null": false,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "users",
+      "name": "updated_at",
+      "type": "timestamp(6) without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "users",
+      "name": "username",
+      "type": "character varying",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "verses",
+      "name": "bible_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "verses",
+      "name": "book_id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "verses",
+      "name": "chapter",
+      "type": "integer",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "verses",
+      "name": "created_at",
+      "type": "timestamp without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "verses",
+      "name": "id",
+      "type": "uuid",
+      "not_null": true,
+      "default_value": "gen_random_uuid()",
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "verses",
+      "name": "ordinal",
+      "type": "integer",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    },
+    {
+      "table_name": "verses",
+      "name": "text",
+      "type": "text",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": "pg_catalog.default"
+    },
+    {
+      "table_name": "verses",
+      "name": "updated_at",
+      "type": "timestamp without time zone",
+      "not_null": true,
+      "default_value": null,
+      "identity": "",
+      "generated": "",
+      "collation": null
+    }
+  ],
+  "constraints": [
+    {
+      "table_name": "bibles",
+      "name": "bibles_abbreviation_not_null",
+      "type": "n",
+      "definition": "NOT NULL abbreviation",
+      "validated": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "bibles_ai_default_aramaic_not_null",
+      "type": "n",
+      "definition": "NOT NULL ai_default_aramaic",
+      "validated": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "bibles_ai_default_english_not_null",
+      "type": "n",
+      "definition": "NOT NULL ai_default_english",
+      "validated": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "bibles_ai_default_greek_not_null",
+      "type": "n",
+      "definition": "NOT NULL ai_default_greek",
+      "validated": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "bibles_ai_default_hebrew_ot_not_null",
+      "type": "n",
+      "definition": "NOT NULL ai_default_hebrew_ot",
+      "validated": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "bibles_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "bibles_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "bibles_language_not_null",
+      "type": "n",
+      "definition": "NOT NULL language",
+      "validated": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "bibles_name_not_null",
+      "type": "n",
+      "definition": "NOT NULL name",
+      "validated": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "bibles_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "bibles_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "books",
+      "name": "books_bible_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL bible_id",
+      "validated": true
+    },
+    {
+      "table_name": "books",
+      "name": "books_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "books",
+      "name": "books_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "books",
+      "name": "books_name_not_null",
+      "type": "n",
+      "definition": "NOT NULL name",
+      "validated": true
+    },
+    {
+      "table_name": "books",
+      "name": "books_ordinal_not_null",
+      "type": "n",
+      "definition": "NOT NULL ordinal",
+      "validated": true
+    },
+    {
+      "table_name": "books",
+      "name": "books_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "books",
+      "name": "books_testament_not_null",
+      "type": "n",
+      "definition": "NOT NULL testament",
+      "validated": true
+    },
+    {
+      "table_name": "books",
+      "name": "books_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "books",
+      "name": "check_books_testament_enum",
+      "type": "c",
+      "definition": "CHECK (((testament)::text = ANY (ARRAY[('old'::character varying)::text, ('new'::character varying)::text, ('other'::character varying)::text])))",
+      "validated": true
+    },
+    {
+      "table_name": "books",
+      "name": "fk_rails_2a229d7e26",
+      "type": "f",
+      "definition": "FOREIGN KEY (bible_id) REFERENCES bibles(id)",
+      "validated": true
+    },
+    {
+      "table_name": "documents",
+      "name": "documents_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "documents",
+      "name": "documents_extracted_text_not_null",
+      "type": "n",
+      "definition": "NOT NULL extracted_text",
+      "validated": true
+    },
+    {
+      "table_name": "documents",
+      "name": "documents_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "documents",
+      "name": "documents_original_filename_not_null",
+      "type": "n",
+      "definition": "NOT NULL original_filename",
+      "validated": true
+    },
+    {
+      "table_name": "documents",
+      "name": "documents_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "documents",
+      "name": "documents_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "documents",
+      "name": "documents_user_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL user_id",
+      "validated": true
+    },
+    {
+      "table_name": "documents",
+      "name": "fk_rails_2be0318c46",
+      "type": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id)",
+      "validated": true
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "mcp_sessions_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "mcp_sessions_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "mcp_sessions_initialized_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL initialized_at",
+      "validated": true
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "mcp_sessions_last_activity_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL last_activity_at",
+      "validated": true
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "mcp_sessions_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "mcp_sessions_session_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL session_id",
+      "validated": true
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "mcp_sessions_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "roles",
+      "name": "roles_access_not_null",
+      "type": "n",
+      "definition": "NOT NULL access",
+      "validated": true
+    },
+    {
+      "table_name": "roles",
+      "name": "roles_administrator_not_null",
+      "type": "n",
+      "definition": "NOT NULL administrator",
+      "validated": true
+    },
+    {
+      "table_name": "roles",
+      "name": "roles_bibles_not_null",
+      "type": "n",
+      "definition": "NOT NULL bibles",
+      "validated": true
+    },
+    {
+      "table_name": "roles",
+      "name": "roles_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "roles",
+      "name": "roles_curation_not_null",
+      "type": "n",
+      "definition": "NOT NULL curation",
+      "validated": true
+    },
+    {
+      "table_name": "roles",
+      "name": "roles_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "roles",
+      "name": "roles_is_default_not_null",
+      "type": "n",
+      "definition": "NOT NULL is_default",
+      "validated": true
+    },
+    {
+      "table_name": "roles",
+      "name": "roles_name_not_null",
+      "type": "n",
+      "definition": "NOT NULL name",
+      "validated": true
+    },
+    {
+      "table_name": "roles",
+      "name": "roles_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "roles",
+      "name": "roles_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "roles_users",
+      "name": "fk_rails_9dada905f6",
+      "type": "f",
+      "definition": "FOREIGN KEY (role_id) REFERENCES roles(id)",
+      "validated": true
+    },
+    {
+      "table_name": "roles_users",
+      "name": "fk_rails_e2a7142459",
+      "type": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id)",
+      "validated": true
+    },
+    {
+      "table_name": "roles_users",
+      "name": "roles_users_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "roles_users",
+      "name": "roles_users_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "roles_users",
+      "name": "roles_users_role_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL role_id",
+      "validated": true
+    },
+    {
+      "table_name": "roles_users",
+      "name": "roles_users_user_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL user_id",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "fk_rails_ec61c299eb",
+      "type": "f",
+      "definition": "FOREIGN KEY (sermon_section_id) REFERENCES sermon_sections(id)",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "sermon_section_verses_bible_uuid_not_null",
+      "type": "n",
+      "definition": "NOT NULL bible_uuid",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "sermon_section_verses_book_uuid_not_null",
+      "type": "n",
+      "definition": "NOT NULL book_uuid",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "sermon_section_verses_chapter_not_null",
+      "type": "n",
+      "definition": "NOT NULL chapter",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "sermon_section_verses_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "sermon_section_verses_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "sermon_section_verses_ordinal_not_null",
+      "type": "n",
+      "definition": "NOT NULL ordinal",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "sermon_section_verses_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "sermon_section_verses_position_not_null",
+      "type": "n",
+      "definition": "NOT NULL \"position\"",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "sermon_section_verses_sermon_section_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL sermon_section_id",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "sermon_section_verses_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "fk_rails_a8a5febfdd",
+      "type": "f",
+      "definition": "FOREIGN KEY (sermon_id) REFERENCES sermons(id)",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "sermon_sections_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "sermon_sections_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "sermon_sections_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "sermon_sections_position_not_null",
+      "type": "n",
+      "definition": "NOT NULL \"position\"",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "sermon_sections_sermon_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL sermon_id",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "sermon_sections_title_not_null",
+      "type": "n",
+      "definition": "NOT NULL title",
+      "validated": true
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "sermon_sections_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "sermons",
+      "name": "fk_rails_f6b0cd5569",
+      "type": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id)",
+      "validated": true
+    },
+    {
+      "table_name": "sermons",
+      "name": "sermons_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "sermons",
+      "name": "sermons_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "sermons",
+      "name": "sermons_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "sermons",
+      "name": "sermons_title_not_null",
+      "type": "n",
+      "definition": "NOT NULL title",
+      "validated": true
+    },
+    {
+      "table_name": "sermons",
+      "name": "sermons_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "sermons",
+      "name": "sermons_user_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL user_id",
+      "validated": true
+    },
+    {
+      "table_name": "sermons",
+      "name": "sermons_visibility_not_null",
+      "type": "n",
+      "definition": "NOT NULL visibility",
+      "validated": true
+    },
+    {
+      "table_name": "studies",
+      "name": "fk_rails_f0b9f60ddd",
+      "type": "f",
+      "definition": "FOREIGN KEY (owner_id) REFERENCES users(id)",
+      "validated": true
+    },
+    {
+      "table_name": "studies",
+      "name": "studies_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "studies",
+      "name": "studies_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "studies",
+      "name": "studies_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "studies",
+      "name": "studies_title_not_null",
+      "type": "n",
+      "definition": "NOT NULL title",
+      "validated": true
+    },
+    {
+      "table_name": "studies",
+      "name": "studies_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "studies",
+      "name": "studies_visibility_not_null",
+      "type": "n",
+      "definition": "NOT NULL visibility",
+      "validated": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "fk_rails_1ffc893bfe",
+      "type": "f",
+      "definition": "FOREIGN KEY (study_question_id) REFERENCES study_questions(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "fk_rails_31e14e99c7",
+      "type": "f",
+      "definition": "FOREIGN KEY (study_id) REFERENCES studies(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "fk_rails_88efe0a3b6",
+      "type": "f",
+      "definition": "FOREIGN KEY (study_commentary_id) REFERENCES study_commentaries(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "fk_rails_c6a78633d8",
+      "type": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "study_answers_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "study_answers_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "study_answers_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "study_answers_response_not_null",
+      "type": "n",
+      "definition": "NOT NULL response",
+      "validated": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "study_answers_study_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL study_id",
+      "validated": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "study_answers_study_question_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL study_question_id",
+      "validated": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "study_answers_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "study_answers_visibility_not_null",
+      "type": "n",
+      "definition": "NOT NULL visibility",
+      "validated": true
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "fk_rails_3fca42ccec",
+      "type": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "fk_rails_a11c8d2c58",
+      "type": "f",
+      "definition": "FOREIGN KEY (study_id) REFERENCES studies(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "study_assignments_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "study_assignments_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "study_assignments_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "study_assignments_study_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL study_id",
+      "validated": true
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "study_assignments_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "study_assignments_user_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL user_id",
+      "validated": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "fk_rails_78b8b27c41",
+      "type": "f",
+      "definition": "FOREIGN KEY (study_id) REFERENCES studies(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "study_commentaries_context_not_null",
+      "type": "n",
+      "definition": "NOT NULL context",
+      "validated": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "study_commentaries_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "study_commentaries_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "study_commentaries_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "study_commentaries_position_not_null",
+      "type": "n",
+      "definition": "NOT NULL \"position\"",
+      "validated": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "study_commentaries_source_type_not_null",
+      "type": "n",
+      "definition": "NOT NULL source_type",
+      "validated": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "study_commentaries_study_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL study_id",
+      "validated": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "study_commentaries_title_not_null",
+      "type": "n",
+      "definition": "NOT NULL title",
+      "validated": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "study_commentaries_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "fk_rails_40ee3fa13b",
+      "type": "f",
+      "definition": "FOREIGN KEY (study_plan_item_id) REFERENCES study_plan_items(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "fk_rails_7c369e9f09",
+      "type": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "study_plan_item_user_states_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "study_plan_item_user_states_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "study_plan_item_user_states_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "study_plan_item_user_states_status_not_null",
+      "type": "n",
+      "definition": "NOT NULL status",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "study_plan_item_user_states_study_plan_item_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL study_plan_item_id",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "study_plan_item_user_states_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "study_plan_item_user_states_user_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL user_id",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "fk_rails_2b3a05c931",
+      "type": "f",
+      "definition": "FOREIGN KEY (study_id) REFERENCES studies(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "study_plan_items_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "study_plan_items_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "study_plan_items_item_type_not_null",
+      "type": "n",
+      "definition": "NOT NULL item_type",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "study_plan_items_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "study_plan_items_position_not_null",
+      "type": "n",
+      "definition": "NOT NULL \"position\"",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "study_plan_items_study_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL study_id",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "study_plan_items_title_not_null",
+      "type": "n",
+      "definition": "NOT NULL title",
+      "validated": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "study_plan_items_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "fk_rails_6522f4e2a1",
+      "type": "f",
+      "definition": "FOREIGN KEY (study_id) REFERENCES studies(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "study_questions_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "study_questions_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "study_questions_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "study_questions_position_not_null",
+      "type": "n",
+      "definition": "NOT NULL \"position\"",
+      "validated": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "study_questions_prompt_not_null",
+      "type": "n",
+      "definition": "NOT NULL prompt",
+      "validated": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "study_questions_question_type_not_null",
+      "type": "n",
+      "definition": "NOT NULL question_type",
+      "validated": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "study_questions_study_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL study_id",
+      "validated": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "study_questions_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "study_questions_verse_anchor_not_null",
+      "type": "n",
+      "definition": "NOT NULL verse_anchor",
+      "validated": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "fk_rails_796fb1b4ff",
+      "type": "f",
+      "definition": "FOREIGN KEY (study_id) REFERENCES studies(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "study_tasks_context_not_null",
+      "type": "n",
+      "definition": "NOT NULL context",
+      "validated": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "study_tasks_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "study_tasks_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "study_tasks_instruction_not_null",
+      "type": "n",
+      "definition": "NOT NULL instruction",
+      "validated": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "study_tasks_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "study_tasks_position_not_null",
+      "type": "n",
+      "definition": "NOT NULL \"position\"",
+      "validated": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "study_tasks_status_not_null",
+      "type": "n",
+      "definition": "NOT NULL status",
+      "validated": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "study_tasks_study_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL study_id",
+      "validated": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "study_tasks_task_type_not_null",
+      "type": "n",
+      "definition": "NOT NULL task_type",
+      "validated": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "study_tasks_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "fk_rails_98a2a74569",
+      "type": "f",
+      "definition": "FOREIGN KEY (study_id) REFERENCES studies(id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "study_verses_bible_uuid_not_null",
+      "type": "n",
+      "definition": "NOT NULL bible_uuid",
+      "validated": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "study_verses_book_uuid_not_null",
+      "type": "n",
+      "definition": "NOT NULL book_uuid",
+      "validated": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "study_verses_chapter_not_null",
+      "type": "n",
+      "definition": "NOT NULL chapter",
+      "validated": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "study_verses_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "study_verses_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "study_verses_ordinal_not_null",
+      "type": "n",
+      "definition": "NOT NULL ordinal",
+      "validated": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "study_verses_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "study_verses_position_not_null",
+      "type": "n",
+      "definition": "NOT NULL \"position\"",
+      "validated": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "study_verses_study_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL study_id",
+      "validated": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "study_verses_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "users",
+      "name": "users_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "users",
+      "name": "users_email_not_null",
+      "type": "n",
+      "definition": "NOT NULL email",
+      "validated": true
+    },
+    {
+      "table_name": "users",
+      "name": "users_encrypted_password_not_null",
+      "type": "n",
+      "definition": "NOT NULL encrypted_password",
+      "validated": true
+    },
+    {
+      "table_name": "users",
+      "name": "users_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "users",
+      "name": "users_name_not_null",
+      "type": "n",
+      "definition": "NOT NULL name",
+      "validated": true
+    },
+    {
+      "table_name": "users",
+      "name": "users_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "users",
+      "name": "users_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    },
+    {
+      "table_name": "users",
+      "name": "users_username_not_null",
+      "type": "n",
+      "definition": "NOT NULL username",
+      "validated": true
+    },
+    {
+      "table_name": "verses",
+      "name": "fk_rails_892fe8ab53",
+      "type": "f",
+      "definition": "FOREIGN KEY (bible_id) REFERENCES bibles(id)",
+      "validated": true
+    },
+    {
+      "table_name": "verses",
+      "name": "fk_rails_e0ba489b1e",
+      "type": "f",
+      "definition": "FOREIGN KEY (book_id) REFERENCES books(id)",
+      "validated": true
+    },
+    {
+      "table_name": "verses",
+      "name": "verses_bible_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL bible_id",
+      "validated": true
+    },
+    {
+      "table_name": "verses",
+      "name": "verses_book_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL book_id",
+      "validated": true
+    },
+    {
+      "table_name": "verses",
+      "name": "verses_chapter_not_null",
+      "type": "n",
+      "definition": "NOT NULL chapter",
+      "validated": true
+    },
+    {
+      "table_name": "verses",
+      "name": "verses_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at",
+      "validated": true
+    },
+    {
+      "table_name": "verses",
+      "name": "verses_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL id",
+      "validated": true
+    },
+    {
+      "table_name": "verses",
+      "name": "verses_ordinal_not_null",
+      "type": "n",
+      "definition": "NOT NULL ordinal",
+      "validated": true
+    },
+    {
+      "table_name": "verses",
+      "name": "verses_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)",
+      "validated": true
+    },
+    {
+      "table_name": "verses",
+      "name": "verses_text_not_null",
+      "type": "n",
+      "definition": "NOT NULL text",
+      "validated": true
+    },
+    {
+      "table_name": "verses",
+      "name": "verses_updated_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL updated_at",
+      "validated": true
+    }
+  ],
+  "indexes": [
+    {
+      "table_name": "bibles",
+      "name": "bibles_pkey",
+      "definition": "CREATE UNIQUE INDEX bibles_pkey ON public.bibles USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "idx_bibles_ai_default_aramaic_true",
+      "definition": "CREATE UNIQUE INDEX idx_bibles_ai_default_aramaic_true ON public.bibles USING btree (ai_default_aramaic) WHERE ai_default_aramaic",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "idx_bibles_ai_default_english_true",
+      "definition": "CREATE UNIQUE INDEX idx_bibles_ai_default_english_true ON public.bibles USING btree (ai_default_english) WHERE ai_default_english",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "idx_bibles_ai_default_greek_true",
+      "definition": "CREATE UNIQUE INDEX idx_bibles_ai_default_greek_true ON public.bibles USING btree (ai_default_greek) WHERE ai_default_greek",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "idx_bibles_ai_default_hebrew_true",
+      "definition": "CREATE UNIQUE INDEX idx_bibles_ai_default_hebrew_true ON public.bibles USING btree (ai_default_hebrew_ot) WHERE ai_default_hebrew_ot",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "index_bibles_on_abbreviation",
+      "definition": "CREATE UNIQUE INDEX index_bibles_on_abbreviation ON public.bibles USING btree (abbreviation)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "bibles",
+      "name": "index_bibles_on_name_and_language",
+      "definition": "CREATE UNIQUE INDEX index_bibles_on_name_and_language ON public.bibles USING btree (name, language)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "books",
+      "name": "books_pkey",
+      "definition": "CREATE UNIQUE INDEX books_pkey ON public.books USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "books",
+      "name": "index_books_on_bible_id",
+      "definition": "CREATE INDEX index_books_on_bible_id ON public.books USING btree (bible_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "books",
+      "name": "index_books_on_bible_id_and_name",
+      "definition": "CREATE UNIQUE INDEX index_books_on_bible_id_and_name ON public.books USING btree (bible_id, name)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "books",
+      "name": "index_books_on_bible_id_and_testament_and_ordinal",
+      "definition": "CREATE INDEX index_books_on_bible_id_and_testament_and_ordinal ON public.books USING btree (bible_id, testament, ordinal)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "books",
+      "name": "index_books_on_ordinal",
+      "definition": "CREATE INDEX index_books_on_ordinal ON public.books USING btree (ordinal)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "documents",
+      "name": "documents_pkey",
+      "definition": "CREATE UNIQUE INDEX documents_pkey ON public.documents USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "documents",
+      "name": "index_documents_on_user_id",
+      "definition": "CREATE INDEX index_documents_on_user_id ON public.documents USING btree (user_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "documents",
+      "name": "index_documents_on_user_id_and_updated_at",
+      "definition": "CREATE INDEX index_documents_on_user_id_and_updated_at ON public.documents USING btree (user_id, updated_at)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "index_mcp_sessions_on_last_activity_at",
+      "definition": "CREATE INDEX index_mcp_sessions_on_last_activity_at ON public.mcp_sessions USING btree (last_activity_at)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "index_mcp_sessions_on_session_id",
+      "definition": "CREATE UNIQUE INDEX index_mcp_sessions_on_session_id ON public.mcp_sessions USING btree (session_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "mcp_sessions",
+      "name": "mcp_sessions_pkey",
+      "definition": "CREATE UNIQUE INDEX mcp_sessions_pkey ON public.mcp_sessions USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "roles",
+      "name": "index_roles_on_name",
+      "definition": "CREATE UNIQUE INDEX index_roles_on_name ON public.roles USING btree (name)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "roles",
+      "name": "roles_pkey",
+      "definition": "CREATE UNIQUE INDEX roles_pkey ON public.roles USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "roles_users",
+      "name": "index_roles_users_on_role_id",
+      "definition": "CREATE INDEX index_roles_users_on_role_id ON public.roles_users USING btree (role_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "roles_users",
+      "name": "index_roles_users_on_user_id",
+      "definition": "CREATE INDEX index_roles_users_on_user_id ON public.roles_users USING btree (user_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "roles_users",
+      "name": "index_roles_users_on_user_id_and_role_id",
+      "definition": "CREATE UNIQUE INDEX index_roles_users_on_user_id_and_role_id ON public.roles_users USING btree (user_id, role_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "roles_users",
+      "name": "roles_users_pkey",
+      "definition": "CREATE UNIQUE INDEX roles_users_pkey ON public.roles_users USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "index_sermon_section_verses_on_sermon_section_id",
+      "definition": "CREATE INDEX index_sermon_section_verses_on_sermon_section_id ON public.sermon_section_verses USING btree (sermon_section_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "index_sermon_section_verses_on_sermon_section_id_and_position",
+      "definition": "CREATE INDEX index_sermon_section_verses_on_sermon_section_id_and_position ON public.sermon_section_verses USING btree (sermon_section_id, \"position\")",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "index_sermon_section_verses_on_verse_uuid",
+      "definition": "CREATE INDEX index_sermon_section_verses_on_verse_uuid ON public.sermon_section_verses USING btree (verse_uuid)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "sermon_section_verses",
+      "name": "sermon_section_verses_pkey",
+      "definition": "CREATE UNIQUE INDEX sermon_section_verses_pkey ON public.sermon_section_verses USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "index_sermon_sections_on_sermon_id",
+      "definition": "CREATE INDEX index_sermon_sections_on_sermon_id ON public.sermon_sections USING btree (sermon_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "index_sermon_sections_on_sermon_id_and_position",
+      "definition": "CREATE INDEX index_sermon_sections_on_sermon_id_and_position ON public.sermon_sections USING btree (sermon_id, \"position\")",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "sermon_sections",
+      "name": "sermon_sections_pkey",
+      "definition": "CREATE UNIQUE INDEX sermon_sections_pkey ON public.sermon_sections USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "sermons",
+      "name": "index_sermons_on_user_id",
+      "definition": "CREATE INDEX index_sermons_on_user_id ON public.sermons USING btree (user_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "sermons",
+      "name": "index_sermons_on_user_id_and_updated_at",
+      "definition": "CREATE INDEX index_sermons_on_user_id_and_updated_at ON public.sermons USING btree (user_id, updated_at)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "sermons",
+      "name": "index_sermons_on_visibility",
+      "definition": "CREATE INDEX index_sermons_on_visibility ON public.sermons USING btree (visibility)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "sermons",
+      "name": "sermons_pkey",
+      "definition": "CREATE UNIQUE INDEX sermons_pkey ON public.sermons USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "studies",
+      "name": "index_studies_on_owner_id",
+      "definition": "CREATE INDEX index_studies_on_owner_id ON public.studies USING btree (owner_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "studies",
+      "name": "studies_pkey",
+      "definition": "CREATE UNIQUE INDEX studies_pkey ON public.studies USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "index_study_answers_on_study_commentary_id",
+      "definition": "CREATE INDEX index_study_answers_on_study_commentary_id ON public.study_answers USING btree (study_commentary_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "index_study_answers_on_study_id",
+      "definition": "CREATE INDEX index_study_answers_on_study_id ON public.study_answers USING btree (study_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "index_study_answers_on_study_question_id",
+      "definition": "CREATE INDEX index_study_answers_on_study_question_id ON public.study_answers USING btree (study_question_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "index_study_answers_on_study_question_id_and_created_at",
+      "definition": "CREATE INDEX index_study_answers_on_study_question_id_and_created_at ON public.study_answers USING btree (study_question_id, created_at)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "index_study_answers_on_user_id",
+      "definition": "CREATE INDEX index_study_answers_on_user_id ON public.study_answers USING btree (user_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_answers",
+      "name": "study_answers_pkey",
+      "definition": "CREATE UNIQUE INDEX study_answers_pkey ON public.study_answers USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "index_study_assignments_on_study_id",
+      "definition": "CREATE INDEX index_study_assignments_on_study_id ON public.study_assignments USING btree (study_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "index_study_assignments_on_study_id_and_user_id",
+      "definition": "CREATE UNIQUE INDEX index_study_assignments_on_study_id_and_user_id ON public.study_assignments USING btree (study_id, user_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "index_study_assignments_on_user_id",
+      "definition": "CREATE INDEX index_study_assignments_on_user_id ON public.study_assignments USING btree (user_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_assignments",
+      "name": "study_assignments_pkey",
+      "definition": "CREATE UNIQUE INDEX study_assignments_pkey ON public.study_assignments USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "index_study_commentaries_on_study_id",
+      "definition": "CREATE INDEX index_study_commentaries_on_study_id ON public.study_commentaries USING btree (study_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "index_study_commentaries_on_study_id_and_position",
+      "definition": "CREATE INDEX index_study_commentaries_on_study_id_and_position ON public.study_commentaries USING btree (study_id, \"position\")",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_commentaries",
+      "name": "study_commentaries_pkey",
+      "definition": "CREATE UNIQUE INDEX study_commentaries_pkey ON public.study_commentaries USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "idx_plan_item_user_state_unique",
+      "definition": "CREATE UNIQUE INDEX idx_plan_item_user_state_unique ON public.study_plan_item_user_states USING btree (user_id, study_plan_item_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "index_study_plan_item_user_states_on_study_plan_item_id",
+      "definition": "CREATE INDEX index_study_plan_item_user_states_on_study_plan_item_id ON public.study_plan_item_user_states USING btree (study_plan_item_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "index_study_plan_item_user_states_on_user_id",
+      "definition": "CREATE INDEX index_study_plan_item_user_states_on_user_id ON public.study_plan_item_user_states USING btree (user_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_plan_item_user_states",
+      "name": "study_plan_item_user_states_pkey",
+      "definition": "CREATE UNIQUE INDEX study_plan_item_user_states_pkey ON public.study_plan_item_user_states USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "index_plan_items_on_study_and_resource",
+      "definition": "CREATE INDEX index_plan_items_on_study_and_resource ON public.study_plan_items USING btree (study_id, resource_type, resource_uuid)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "index_study_plan_items_on_study_id",
+      "definition": "CREATE INDEX index_study_plan_items_on_study_id ON public.study_plan_items USING btree (study_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "index_study_plan_items_on_study_id_and_position",
+      "definition": "CREATE INDEX index_study_plan_items_on_study_id_and_position ON public.study_plan_items USING btree (study_id, \"position\")",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_plan_items",
+      "name": "study_plan_items_pkey",
+      "definition": "CREATE UNIQUE INDEX study_plan_items_pkey ON public.study_plan_items USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "index_study_questions_on_study_id",
+      "definition": "CREATE INDEX index_study_questions_on_study_id ON public.study_questions USING btree (study_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "index_study_questions_on_study_id_and_position",
+      "definition": "CREATE INDEX index_study_questions_on_study_id_and_position ON public.study_questions USING btree (study_id, \"position\")",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_questions",
+      "name": "study_questions_pkey",
+      "definition": "CREATE UNIQUE INDEX study_questions_pkey ON public.study_questions USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "index_study_tasks_on_study_id",
+      "definition": "CREATE INDEX index_study_tasks_on_study_id ON public.study_tasks USING btree (study_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "index_study_tasks_on_study_id_and_position",
+      "definition": "CREATE INDEX index_study_tasks_on_study_id_and_position ON public.study_tasks USING btree (study_id, \"position\")",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_tasks",
+      "name": "study_tasks_pkey",
+      "definition": "CREATE UNIQUE INDEX study_tasks_pkey ON public.study_tasks USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "idx_study_verses_lookup_uuid",
+      "definition": "CREATE INDEX idx_study_verses_lookup_uuid ON public.study_verses USING btree (study_id, bible_uuid, book_uuid, chapter, ordinal)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "index_study_verses_on_bible_uuid",
+      "definition": "CREATE INDEX index_study_verses_on_bible_uuid ON public.study_verses USING btree (bible_uuid)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "index_study_verses_on_book_uuid",
+      "definition": "CREATE INDEX index_study_verses_on_book_uuid ON public.study_verses USING btree (book_uuid)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "index_study_verses_on_study_id",
+      "definition": "CREATE INDEX index_study_verses_on_study_id ON public.study_verses USING btree (study_id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "index_study_verses_on_study_id_and_position",
+      "definition": "CREATE INDEX index_study_verses_on_study_id_and_position ON public.study_verses USING btree (study_id, \"position\")",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "index_study_verses_on_verse_uuid",
+      "definition": "CREATE INDEX index_study_verses_on_verse_uuid ON public.study_verses USING btree (verse_uuid)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "study_verses",
+      "name": "study_verses_pkey",
+      "definition": "CREATE UNIQUE INDEX study_verses_pkey ON public.study_verses USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "users",
+      "name": "index_users_on_api_token",
+      "definition": "CREATE UNIQUE INDEX index_users_on_api_token ON public.users USING btree (api_token)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "users",
+      "name": "index_users_on_email",
+      "definition": "CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "users",
+      "name": "index_users_on_reset_password_token",
+      "definition": "CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING btree (reset_password_token)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "users",
+      "name": "index_users_on_username",
+      "definition": "CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (username)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "users",
+      "name": "users_pkey",
+      "definition": "CREATE UNIQUE INDEX users_pkey ON public.users USING btree (id)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "verses",
+      "name": "index_verses_on_bible_book_chapter_ordinal",
+      "definition": "CREATE UNIQUE INDEX index_verses_on_bible_book_chapter_ordinal ON public.verses USING btree (bible_id, book_id, chapter, ordinal)",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "verses",
+      "name": "verses_gin_text",
+      "definition": "CREATE INDEX verses_gin_text ON public.verses USING gin (to_tsvector('simple'::regconfig, COALESCE(text, ''::text)))",
+      "valid": true,
+      "ready": true
+    },
+    {
+      "table_name": "verses",
+      "name": "verses_pkey",
+      "definition": "CREATE UNIQUE INDEX verses_pkey ON public.verses USING btree (id)",
+      "valid": true,
+      "ready": true
+    }
+  ],
+  "triggers": [],
+  "policies": [],
+  "types": []
+}

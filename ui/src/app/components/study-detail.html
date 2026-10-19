@@ -122,10 +122,10 @@
                         <div class="d-flex align-items-center gap-2 min-w-0 max-w-100">
                           <small
                             class="text-muted d-inline-flex align-items-center gap-1 min-w-0"
-                            [attr.title]="planItemTypeLabel(item.item_type)"
+                            [attr.title]="planItemTypeLabel(item.itemType)"
                           >
-                            <span [class]="planItemTypeIconClasses(item.item_type)" aria-hidden="true"></span>
-                            <span class="text-truncate min-w-0">{{ planItemTypeLabel(item.item_type) }}</span>
+                            <span [class]="planItemTypeIconClasses(item.itemType)" aria-hidden="true"></span>
+                            <span class="text-truncate min-w-0">{{ planItemTypeLabel(item.itemType) }}</span>
                           </small>
                           @if (itemDisplayDuration(item); as minutes) {
                             <small class="text-body-secondary flex-shrink-0">{{ formatMinutes(minutes) }}</small>

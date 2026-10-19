@@ -25,7 +25,7 @@ export class SessionService {
       this.clearSessionState();
       return;
     }
-    this.http.get<SessionResponse>(`${this.bibler.getUrl()}/session.json`).subscribe({
+    this.http.get<SessionResponse>(`${this.bibler.getUrl()}/session`).subscribe({
       next: (r) => this.applySessionPayload(r),
       error: () => this.clearSessionState()
     });
@@ -33,7 +33,7 @@ export class SessionService {
 
   login(username: string, password: string): Observable<void> {
     return this.http
-      .post<SessionResponse>(`${this.bibler.getUrl()}/session.json`, { username, password })
+      .post<SessionResponse>(`${this.bibler.getUrl()}/session`, { username, password })
       .pipe(
         tap((r) => {
           this.authToken.setToken(r.token);
@@ -44,7 +44,7 @@ export class SessionService {
   }
 
   logout(): Observable<void> {
-    return this.http.delete(`${this.bibler.getUrl()}/session.json`).pipe(
+    return this.http.delete(`${this.bibler.getUrl()}/session`).pipe(
       tap(() => {
         this.authToken.setToken('');
         this.clearSessionState();
@@ -97,7 +97,7 @@ export class SessionService {
     if (this.permissions() !== null && this.user()) {
       return of(void 0);
     }
-    return this.http.get<SessionResponse>(`${this.bibler.getUrl()}/session.json`).pipe(
+    return this.http.get<SessionResponse>(`${this.bibler.getUrl()}/session`).pipe(
       tap((r) => this.applySessionPayload(r)),
       map(() => void 0),
       catchError(() => {

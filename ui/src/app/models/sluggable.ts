@@ -1,3 +1,1 @@
-export interface Uuidable {
-    uuid: string;
-}
+export { Uuidable } from "bibler-core";

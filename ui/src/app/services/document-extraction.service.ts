@@ -12,7 +12,7 @@ export const EXTRACTED_TEXT_WARN_BYTES = 128 * 1024;
 })
 export class DocumentExtractionService {
   constructor() {
-    GlobalWorkerOptions.workerSrc = 'pdf.worker.min.mjs';
+    GlobalWorkerOptions.workerSrc = new URL('assets/pdf.worker.min.mjs', document.baseURI).href;
   }
 
   async extractText(file: File): Promise<{ text: string; error?: string }> {

@@ -132,36 +132,36 @@
                                     @if (row.ai) {
                                         <div class="small mb-2">{{row.ai.commentary}}</div>
 
-                                        @if (row.ai.translation_lens) {
-                                            <span class="badge text-bg-secondary me-1">{{row.ai.translation_lens}}</span>
+                                        @if (row.ai.translationLens) {
+                                            <span class="badge text-bg-secondary me-1">{{row.ai.translationLens}}</span>
                                         }
-                                        @if (row.ai.translation_issues) {
+                                        @if (row.ai.translationIssues) {
                                             <span class="badge text-bg-warning text-dark me-1">Ambiguity</span>
                                         }
-                                        @if (row.ai.idiom_notes && row.ai.idiom_notes.length > 0) {
+                                        @if (row.ai.idiomNotes && row.ai.idiomNotes.length > 0) {
                                             <span class="badge text-bg-info">Cultural/Idiom</span>
                                         }
 
                                         <div class="mt-2 small">
-                                            @if (row.ai.linguistic_notes) {
-                                                <div><strong>Linguistic:</strong> {{row.ai.linguistic_notes}}</div>
+                                            @if (row.ai.linguisticNotes) {
+                                                <div><strong>Linguistic:</strong> {{row.ai.linguisticNotes}}</div>
                                             }
-                                            @if (row.ai.translation_issues) {
-                                                <div><strong>Translation issues:</strong> {{row.ai.translation_issues}}</div>
+                                            @if (row.ai.translationIssues) {
+                                                <div><strong>Translation issues:</strong> {{row.ai.translationIssues}}</div>
                                             }
-                                            @if (row.ai.cultural_context) {
-                                                <div><strong>Cultural:</strong> {{row.ai.cultural_context}}</div>
+                                            @if (row.ai.culturalContext) {
+                                                <div><strong>Cultural:</strong> {{row.ai.culturalContext}}</div>
                                             }
-                                            @if (row.ai.anthropological_context) {
-                                                <div><strong>Anthropological:</strong> {{row.ai.anthropological_context}}</div>
+                                            @if (row.ai.anthropologicalContext) {
+                                                <div><strong>Anthropological:</strong> {{row.ai.anthropologicalContext}}</div>
                                             }
-                                            @if (row.ai.grammar_notes) {
-                                                <div><strong>Grammar impact:</strong> {{row.ai.grammar_notes}}</div>
+                                            @if (row.ai.grammarNotes) {
+                                                <div><strong>Grammar impact:</strong> {{row.ai.grammarNotes}}</div>
                                             }
-                                            @if (row.ai.idiom_notes && row.ai.idiom_notes.length > 0) {
-                                                <div><strong>Idiom notes:</strong> {{row.ai.idiom_notes.join('; ')}}</div>
+                                            @if (row.ai.idiomNotes && row.ai.idiomNotes.length > 0) {
+                                                <div><strong>Idiom notes:</strong> {{row.ai.idiomNotes.join('; ')}}</div>
                                             }
-                                            @if (row.ai.interlinear_tokens && row.ai.interlinear_tokens.length > 0) {
+                                            @if (row.ai.interlinearTokens && row.ai.interlinearTokens.length > 0) {
                                                 <div class="mt-1"><strong>Interlinear tokens</strong></div>
                                                 <div class="table-responsive">
                                                     <table class="table table-sm mb-0">
@@ -177,7 +177,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @for (token of row.ai.interlinear_tokens; track token.token + (token.lemma || '')) {
+                                                            @for (token of row.ai.interlinearTokens; track token.token + (token.lemma || '')) {
                                                                 <tr>
                                                                     <td>{{token.token}}</td>
                                                                     <td>{{token.transliteration || '-'}}</td>
@@ -185,7 +185,7 @@
                                                                     <td>{{token.morphology || '-'}}</td>
                                                                     <td>{{token.gloss || '-'}}</td>
                                                                     <td>{{token.confidence ?? '-'}}</td>
-                                                                    <td>{{token.ambiguity_note || '-'}}</td>
+                                                                    <td>{{token.ambiguityNote || '-'}}</td>
                                                                 </tr>
                                                             }
                                                         </tbody>

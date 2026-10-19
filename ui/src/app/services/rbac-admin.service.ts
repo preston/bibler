@@ -6,27 +6,8 @@ import { PageMeta, PagedQuery } from '../models/pagination';
 import { SessionRole } from '../models/session';
 import { pagedQueryToParams } from './paged-query-params';
 
-export interface RolePayload {
-  name: string;
-  default?: boolean;
-  administrator?: boolean;
-  bibles?: boolean;
-  access?: boolean;
-  curation?: boolean;
-}
-
-export interface AdminUserSummary {
-  id: number;
-  username: string;
-  email: string;
-  name: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface AdminUserDetail extends AdminUserSummary {
-  roles: SessionRole[];
-}
+export type { RolePayload, AdminUserSummary, AdminUserDetail } from "bibler-core";
+import type { RolePayload, AdminUserSummary, AdminUserDetail } from "bibler-core";
 
 @Injectable({ providedIn: 'root' })
 export class RbacAdminService {
@@ -38,14 +19,14 @@ export class RbacAdminService {
   }
 
   listRoles(): Observable<{ roles: SessionRole[] }> {
-    return this.http.get<{ roles: SessionRole[] }>(`${this.base()}/roles.json`);
+    return this.http.get<{ roles: SessionRole[] }>(`${this.base()}/roles`);
   }
 
   createRole(role: RolePayload): Observable<{ role: SessionRole }> {
-    return this.http.post<{ role: SessionRole }>(`${this.base()}/roles.json`, {
+    return this.http.post<{ role: SessionRole }>(`${this.base()}/roles`, {
       role: {
         name: role.name,
-        is_default: role.default ?? false,
+        isDefault: role.default ?? false,
         administrator: role.administrator ?? false,
         bibles: role.bibles ?? false,
         access: role.access ?? false,
@@ -54,30 +35,30 @@ export class RbacAdminService {
     });
   }
 
-  updateRole(id: number, role: Partial<RolePayload>): Observable<{ role: SessionRole }> {
+  updateRole(id: string, role: Partial<RolePayload>): Observable<{ role: SessionRole }> {
     const body: Record<string, unknown> = { role: {} };
     const r = body['role'] as Record<string, unknown>;
     if (role.name !== undefined) r['name'] = role.name;
-    if (role.default !== undefined) r['is_default'] = role.default;
+    if (role.default !== undefined) r['isDefault'] = role.default;
     if (role.administrator !== undefined) r['administrator'] = role.administrator;
     if (role.bibles !== undefined) r['bibles'] = role.bibles;
     if (role.access !== undefined) r['access'] = role.access;
     if (role.curation !== undefined) r['curation'] = role.curation;
-    return this.http.patch<{ role: SessionRole }>(`${this.base()}/roles/${id}.json`, body);
+    return this.http.patch<{ role: SessionRole }>(`${this.base()}/roles/${id}`, body);
   }
 
-  deleteRole(id: number): Observable<unknown> {
-    return this.http.delete(`${this.base()}/roles/${id}.json`);
+  deleteRole(id: string): Observable<unknown> {
+    return this.http.delete(`${this.base()}/roles/${id}`);
   }
 
   listUsers(query?: PagedQuery): Observable<{ users: AdminUserSummary[]; meta?: PageMeta }> {
-    return this.http.get<{ users: AdminUserSummary[]; meta?: PageMeta }>(`${this.base()}/users.json`, {
+    return this.http.get<{ users: AdminUserSummary[]; meta?: PageMeta }>(`${this.base()}/users`, {
       params: pagedQueryToParams(query)
     });
   }
 
-  getUser(id: number): Observable<{ user: AdminUserDetail }> {
-    return this.http.get<{ user: AdminUserDetail }>(`${this.base()}/users/${id}.json`);
+  getUser(id: string): Observable<{ user: AdminUserDetail }> {
+    return this.http.get<{ user: AdminUserDetail }>(`${this.base()}/users/${id}`);
   }
 
   createUser(payload: {
@@ -85,8 +66,8 @@ export class RbacAdminService {
     email: string;
     name: string;
     password: string;
-    password_confirmation: string;
-    role_ids?: number[];
+    passwordConfirmation: string;
+    roleIds?: string[];
   }): Observable<{ user: AdminUserDetail }> {
     const body: Record<string, unknown> = {
       user: {
@@ -94,16 +75,16 @@ export class RbacAdminService {
         email: payload.email,
         name: payload.name,
         password: payload.password,
-        password_confirmation: payload.password_confirmation
+        passwordConfirmation: payload.passwordConfirmation
       }
     };
-    if (payload.role_ids?.length) body['role_ids'] = payload.role_ids;
-    return this.http.post<{ user: AdminUserDetail }>(`${this.base()}/users.json`, body);
+    if (payload.roleIds?.length) body['roleIds'] = payload.roleIds;
+    return this.http.post<{ user: AdminUserDetail }>(`${this.base()}/users`, body);
   }
 
   updateUser(
-    id: number,
-    payload: { email?: string; name?: string; password?: string; password_confirmation?: string; role_ids?: number[] }
+    id: string,
+    payload: { email?: string; name?: string; password?: string; passwordConfirmation?: string; roleIds?: string[] }
   ): Observable<{ user: AdminUserDetail }> {
     const body: Record<string, unknown> = {};
     if (payload.email !== undefined || payload.name !== undefined || payload.password) {
@@ -113,11 +94,11 @@ export class RbacAdminService {
       if (payload.name !== undefined) u['name'] = payload.name;
       if (payload.password) {
         u['password'] = payload.password;
-        u['password_confirmation'] = payload.password_confirmation ?? payload.password;
+        u['passwordConfirmation'] = payload.passwordConfirmation ?? payload.password;
       }
     }
-    if (payload.role_ids) body['role_ids'] = payload.role_ids;
-    return this.http.patch<{ user: AdminUserDetail }>(`${this.base()}/users/${id}.json`, body);
+    if (payload.roleIds) body['roleIds'] = payload.roleIds;
+    return this.http.patch<{ user: AdminUserDetail }>(`${this.base()}/users/${id}`, body);
   }
 
 }

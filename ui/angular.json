@@ -1,130 +1,98 @@
 {
-    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-    "cli": {
-        "analytics": false
-    },
-    "version": 1,
-    "newProjectRoot": "projects",
-    "projects": {
-        "bibler-ui": {
-            "projectType": "application",
-            "schematics": {
-                "@schematics/angular:component": {
-                    "style": "less"
-                },
-                "@schematics/angular:application": {
-                    "strict": true
-                }
-            },
-            "root": "",
-            "sourceRoot": "src",
-            "prefix": "app",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
-                    "options": {
-                        "outputPath": "dist/bibler-ui",
-                        "index": "src/index.html",
-                        "main": "src/main.ts",
-                        "polyfills": [],
-                        "tsConfig": "tsconfig.app.json",
-                        "inlineStyleLanguage": "scss",
-                        "assets": [
-                            "src/favicon.ico",
-                            "src/assets",
-                            {
-                                "glob": "pdf.worker.min.mjs",
-                                "input": "node_modules/pdfjs-dist/build",
-                                "output": "/"
-                            }
-                        ],
-                        "styles": [
-                            "src/styles.scss",
-                            "node_modules/bootstrap/dist/css/bootstrap.min.css",
-                            "src/lux.min.css",
-                            "node_modules/bootstrap-icons/font/bootstrap-icons.css"
-                        ],
-                        "scripts": [
-                            "node_modules/@popperjs/core/dist/umd/popper.min.js",
-                            "node_modules/bootstrap/dist/js/bootstrap.min.js"
-                        ]
-                    },
-                    "configurations": {
-                        "production": {
-                            "budgets": [
-                                {
-                                    "type": "initial",
-                                    "maximumWarning": "1mb",
-                                    "maximumError": "5mb"
-                                },
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "4kb",
-                                    "maximumError": "8kb"
-                                }
-                            ],
-                            "outputHashing": "all"
-                        },
-                        "development": {
-                            "buildOptimizer": false,
-                            "optimization": false,
-                            "vendorChunk": true,
-                            "extractLicenses": false,
-                            "sourceMap": true,
-                            "namedChunks": true
-                        }
-                    },
-                    "defaultConfiguration": "production"
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "buildTarget": "bibler-ui:build"
-                    },
-                    "configurations": {
-                        "production": {
-                            "buildTarget": "bibler-ui:build:production"
-                        },
-                        "development": {
-                            "buildTarget": "bibler-ui:build:development"
-                        }
-                    },
-                    "defaultConfiguration": "development"
-                },
-                "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                        "buildTarget": "bibler-ui:build"
-                    }
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "polyfills": [],
-                        "tsConfig": "tsconfig.spec.json",
-                        "inlineStyleLanguage": "scss",
-                        "assets": [
-                            "src/favicon.ico",
-                            "src/assets",
-                            {
-                                "glob": "pdf.worker.min.mjs",
-                                "input": "node_modules/pdfjs-dist/build",
-                                "output": "/"
-                            }
-                        ],
-                        "styles": [
-                            "src/styles.scss",
-                            "node_modules/bootstrap/dist/css/bootstrap.min.css",
-                            "src/lux.min.css",
-                            "node_modules/bootstrap-icons/font/bootstrap-icons.css"
-                        ],
-                        "scripts": [
-                            "node_modules/@popperjs/core/dist/umd/popper.min.js",
-                            "node_modules/bootstrap/dist/js/bootstrap.min.js"
-                        ]
-                    }
-                }
-            }
+  "$schema": "../node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false
+  },
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "bibler-ui": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "less"
+        },
+        "@schematics/angular:application": {
+          "strict": true
         }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": {
+              "base": "dist/bibler-ui",
+              "browser": ""
+            },
+            "index": "src/index.html",
+            "polyfills": [],
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss",
+              "../node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/lux.min.css",
+              "../node_modules/bootstrap-icons/font/bootstrap-icons.css"
+            ],
+            "scripts": [
+              "../node_modules/@popperjs/core/dist/umd/popper.min.js",
+              "../node_modules/bootstrap/dist/js/bootstrap.min.js"
+            ],
+            "browser": "src/main.ts"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kb",
+                  "maximumError": "8kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "buildTarget": "bibler-ui:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "bibler-ui:build:production"
+            },
+            "development": {
+              "buildTarget": "bibler-ui:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n",
+          "options": {
+            "buildTarget": "bibler-ui:build"
+          }
+        }
+      }
     }
+  }
 }

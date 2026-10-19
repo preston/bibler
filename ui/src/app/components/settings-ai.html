@@ -32,10 +32,10 @@
             <tr>
               <td>{{b.name}} <span class="text-muted">({{b.uuid}})</span></td>
               <td>{{b.language}}</td>
-              <td><input type="checkbox" class="form-check-input" [checked]="!!b.ai_default_english" (change)="b.ai_default_english = $any($event.target).checked"></td>
-              <td><input type="checkbox" class="form-check-input" [checked]="!!b.ai_default_hebrew_ot" (change)="b.ai_default_hebrew_ot = $any($event.target).checked"></td>
-              <td><input type="checkbox" class="form-check-input" [checked]="!!b.ai_default_greek" (change)="b.ai_default_greek = $any($event.target).checked"></td>
-              <td><input type="checkbox" class="form-check-input" [checked]="!!b.ai_default_aramaic" (change)="b.ai_default_aramaic = $any($event.target).checked"></td>
+              <td><input type="checkbox" class="form-check-input" [checked]="!!b.aiDefaultEnglish" (change)="b.aiDefaultEnglish = $any($event.target).checked"></td>
+              <td><input type="checkbox" class="form-check-input" [checked]="!!b.aiDefaultHebrewOt" (change)="b.aiDefaultHebrewOt = $any($event.target).checked"></td>
+              <td><input type="checkbox" class="form-check-input" [checked]="!!b.aiDefaultGreek" (change)="b.aiDefaultGreek = $any($event.target).checked"></td>
+              <td><input type="checkbox" class="form-check-input" [checked]="!!b.aiDefaultAramaic" (change)="b.aiDefaultAramaic = $any($event.target).checked"></td>
             </tr>
           }
         </tbody>

@@ -6,7 +6,7 @@
   <div class="card-header"><strong>Commentary</strong></div>
   <div class="card-body">
     <h6 class="text-muted">Manual and generated commentary</h6>
-    @if (vm.canEditStructure() && (!(vm.selectedPlanItem()?.item_type === 'commentary') || vm.visibleCommentaries().length === 0)) {
+    @if (vm.canEditStructure() && (!(vm.selectedPlanItem()?.itemType === 'commentary') || vm.visibleCommentaries().length === 0)) {
       <div class="mb-2">
         <input class="form-control mb-2" [ngModel]="vm.commentaryTitle()" (ngModelChange)="vm.commentaryTitle.set($event)" placeholder="Commentary title" />
         <input class="form-control mb-2" [ngModel]="vm.commentaryPrompt()" (ngModelChange)="vm.commentaryPrompt.set($event)" placeholder="Prompt / context" />
@@ -22,12 +22,12 @@
         </button>
       </div>
     }
-    @if (vm.canEditStructure() && vm.selectedPlanItem()?.item_type === 'commentary' && vm.visibleCommentaries().length > 0) {
+    @if (vm.canEditStructure() && vm.selectedPlanItem()?.itemType === 'commentary' && vm.visibleCommentaries().length > 0) {
       <div class="alert alert-secondary py-2">
         This step already has commentary. Edit the existing entry below.
       </div>
     }
-    @if (vm.showStudyDetailsEdit() && (!(vm.selectedPlanItem()?.item_type === 'commentary') || vm.visibleCommentaries().length === 0)) {
+    @if (vm.showStudyDetailsEdit() && (!(vm.selectedPlanItem()?.itemType === 'commentary') || vm.visibleCommentaries().length === 0)) {
       <div class="card mb-3 bg-success-subtle border-success-subtle">
         <div class="card-header py-2"><strong class="small">AI commentary</strong></div>
         <div class="card-body py-2">
@@ -44,7 +44,7 @@
       @for (commentary of vm.visibleCommentaries(); track commentary.uuid) {
         <li class="list-group-item">
           <strong>{{ commentary.title }}</strong>
-          <span class="badge ms-2" [class.bg-secondary]="commentary.source_type === 'manual'" [class.bg-info]="commentary.source_type === 'ai'">{{ commentary.source_type }}</span>
+          <span class="badge ms-2" [class.bg-secondary]="commentary.sourceType === 'manual'" [class.bg-info]="commentary.sourceType === 'ai'">{{ commentary.sourceType }}</span>
           <div class="small mt-1">{{ commentary.body }}</div>
           @if (vm.canEditStructure()) {
             <div class="row g-2 mt-2">

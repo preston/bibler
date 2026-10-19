@@ -33,14 +33,14 @@ export class SettingsUsersComponent implements OnInit {
   createEmail = signal('');
   createName = signal('');
   createPassword = signal('');
-  createRoleIds = signal<number[]>([]);
+  createRoleIds = signal<string[]>([]);
 
   readonly sortable = [
     { label: 'Username', value: 'username' },
     { label: 'Email', value: 'email' },
     { label: 'Name', value: 'name' },
-    { label: 'Created', value: 'created_at' },
-    { label: 'Updated', value: 'updated_at' }
+    { label: 'Created', value: 'createdAt' },
+    { label: 'Updated', value: 'updatedAt' }
   ];
 
   ngOnInit(): void {
@@ -60,7 +60,7 @@ export class SettingsUsersComponent implements OnInit {
         sort: this.sort(),
         direction: this.direction(),
         page: this.page(),
-        per_page: this.perPage()
+        perPage: this.perPage()
       })
       .subscribe({
         next: (r) => {
@@ -75,7 +75,7 @@ export class SettingsUsersComponent implements OnInit {
       });
   }
 
-  toggleCreateRole(id: number, checked: boolean): void {
+  toggleCreateRole(id: string, checked: boolean): void {
     this.createRoleIds.update((ids) => {
       const set = new Set(ids);
       if (checked) set.add(id);
@@ -100,8 +100,8 @@ export class SettingsUsersComponent implements OnInit {
         email,
         name,
         password,
-        password_confirmation: password,
-        role_ids: this.createRoleIds().length ? this.createRoleIds() : undefined
+        passwordConfirmation: password,
+        roleIds: this.createRoleIds().length ? this.createRoleIds() : undefined
       })
       .subscribe({
         next: () => {

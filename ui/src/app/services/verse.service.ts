@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 
 import {BiblerService} from './bibler.service';
 import { Book } from '../models/book';
+import { scriptureVersesPath } from './api-url';
 import { Bible } from '../models/bible';
 import { ComparatorAiCommentaryRequest, ComparatorAiSseMessage, Verse } from '../models/verse';
 
@@ -17,12 +18,12 @@ export class VerseService {
 	}
 
 	index(bible: Bible, book: Book, chapter: number) {
-		const url = this.biblerService.getUrl() + '/' + bible.uuid + '/' + book.uuid + '/' + chapter;
+		const url = this.biblerService.getUrl() + scriptureVersesPath(bible.uuid, book.uuid, chapter);
 		return this.http.get<Verse[]>(url);
 	}
 
 	/**
-	 * POSTs bible/book UUIDs and chapter to `/ai/comparator_commentary` (verse text is loaded server-side).
+	 * POSTs bible/book UUIDs and chapter to `/ai/comparator-commentary` (verse text is loaded server-side).
 	 * Replays the JSON response as a sequence of `ComparatorAiSseMessage` events (status → verse × n → complete).
 	 */
 	requestComparatorAiCommentary(payload: ComparatorAiCommentaryRequest): Observable<ComparatorAiSseMessage> {
@@ -54,7 +55,7 @@ export class VerseService {
 		signal: AbortSignal
 	): Promise<void> {
 		subscriber.next({ event: 'status', data: { message: 'Generating AI commentary...' } });
-		const url = `${this.biblerService.getUrl()}/ai/comparator_commentary`;
+		const url = `${this.biblerService.getUrl()}/ai/comparator-commentary`;
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },

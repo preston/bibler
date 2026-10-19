@@ -1,7 +1,8 @@
 // Author: Preston Lee
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import type { Verse } from 'bibler-core';
 
 import { BiblerService } from './bibler.service';
 
@@ -10,18 +11,10 @@ import { BiblerService } from './bibler.service';
 })
 export class SearchService {
 
-    // private verses;
-
-    constructor(private biblerService: BiblerService, private http: HttpClient) {
-    }
+    constructor(private biblerService: BiblerService, private http: HttpClient) {}
 
     search(bibleUuid: string, searchText: string) {
-        var url = this.biblerService.getUrl() + '/' + bibleUuid + '/search.json';
-        var headers = new HttpHeaders();
-        headers.append('Content-Type', 'application/x-www-form-urlencoded');
-
-        // var args = "text=" + searchText;
-        return this.http.post(url, null, { headers: headers, params: { text: searchText } });//.toPromise().then(res => res.json());
+        const url = `${this.biblerService.getUrl()}/bibles/${encodeURIComponent(bibleUuid)}/search`;
+        return this.http.post<Verse[]>(url, { text: searchText });
     }
-
 }

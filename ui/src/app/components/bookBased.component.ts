@@ -7,6 +7,7 @@ import { VerseService } from '../services/verse.service';
 import { BibleBasedComponent } from './bibleBased.component';
 import { Book } from '../models/book';
 import { Verse } from '../models/verse';
+import { scriptureVersesPath } from '../services/api-url';
 
 export abstract class BookBasedComponent extends BibleBasedComponent {
 
@@ -104,12 +105,12 @@ export abstract class BookBasedComponent extends BibleBasedComponent {
 
     abstract selectChapter(n: number): any;
 
-    verseDataPermalink(verse: Verse, format: string) {
+    verseDataPermalink(verse: Verse) {
         const bible = this.bible();
         const book = this.book();
         const chapter = this.chapter();
         if (!bible || !book || chapter === null) return '';
-        return this.biblerService.getUrl() + '/' + bible.uuid + '/' + book.uuid + '/' + chapter + '/' + verse.ordinal + '.' + format;
+        return this.biblerService.getUrl() + scriptureVersesPath(bible.uuid, book.uuid, chapter, verse.ordinal);
     }
 
     override verseMailTo(verse: Verse) {

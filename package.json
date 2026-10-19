@@ -1,0 +1,36 @@
+{
+  "name": "bibler",
+  "private": true,
+  "engines": {
+    "node": "^26"
+  },
+  "packageManager": "npm@12.2.0",
+  "repository": "git+https://github.com/preston/bibler.git",
+  "workspaces": [
+    "core",
+    "server",
+    "ui"
+  ],
+  "scripts": {
+    "build": "npm run build:core && npm run build:server && npm run build:ui",
+    "build:core": "npm run build --workspace=bibler-core",
+    "build:server": "npm run build --workspace=bibler-server",
+    "build:ui": "npm run build --workspace=bibler-ui",
+    "start:server": "npm run dev --workspace=bibler-server",
+    "start:ui": "npm run start --workspace=bibler-ui",
+    "typecheck": "npm run build:core && npm run prisma:generate && npm run typecheck --workspace=bibler-server && npm run typecheck --workspace=bibler-ui",
+    "test": "npm run build:core && npm run prisma:generate && npm run test --workspace=bibler-core && npm run test --workspace=bibler-server && npm run test --workspace=bibler-ui",
+    "test:integration": "npm run test:integration --workspace=bibler-server",
+    "prisma:generate": "npm run prisma:generate --workspace=bibler-server",
+    "prisma:migrate": "npm run prisma:migrate --workspace=bibler-server",
+    "prisma:deploy": "npm run prisma:deploy --workspace=bibler-server",
+    "db:bootstrap": "npm run db:bootstrap --workspace=bibler-server",
+    "db:seed": "npm run db:seed --workspace=bibler-server",
+    "db:import": "npm run db:import --workspace=bibler-server",
+    "docker:up": "docker compose -f docker-compose.development.yml up -d --wait",
+    "docker:down": "docker compose -f docker-compose.development.yml down",
+    "docker:up:full": "docker compose -f docker-compose.full.yml up -d --wait --build",
+    "docker:down:full": "docker compose -f docker-compose.full.yml down",
+    "db:catalog": "npm run db:catalog --workspace=bibler-server"
+  }
+}

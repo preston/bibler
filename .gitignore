@@ -1,46 +1,42 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+# Dependencies, generated output, and caches
+node_modules/
+dist/
+out-tsc/
+.angular/
+coverage/
+.cache/
+tmp/
+/bazel-out/
+/ui/src/assets/configuration.js
+/ui/src/assets/pdf.worker.min.mjs
 
-# compiled output
-/dist
-/tmp
-/out-tsc
-# Only exists if Bazel was run
-/bazel-out
-
-# dependencies and caches
-.angular
-node_modules
-
-# profiling files
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+!**/.env.example
+*.log
+*.pid
+npm-debug.log*
+yarn-error.log*
 chrome-profiler-events*.json
 
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
+# Editors and operating systems
+.idea/
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
-
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
-/typings
-
-# System Files
+.history/
+.project
+.classpath
+.c9/
+.settings/
+*.launch
+*.sublime-workspace
 .DS_Store
 Thumbs.db
+
+# Local verification evidence
+test-results/

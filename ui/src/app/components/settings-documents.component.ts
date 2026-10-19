@@ -56,7 +56,7 @@ export class SettingsDocumentsComponent implements OnInit {
   requestDeleteDocument(f: DocumentRecord): void {
     this.pendingConfirmation.set({
       title: 'Delete document?',
-      message: `Delete “${f.original_filename}”?`,
+      message: `Delete “${f.originalFilename}”?`,
       confirmLabel: 'Delete',
       onConfirm: () => this.performDeleteDocument(f)
     });

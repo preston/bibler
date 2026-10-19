@@ -32,7 +32,7 @@
           <div class="d-flex justify-content-between align-items-start">
             <div>
               <strong>{{ task.instruction }}</strong>
-              <div class="small text-muted">{{ task.task_type }} | {{ task.assignee_label }}</div>
+              <div class="small text-muted">{{ task.taskType }} | {{ task.assigneeLabel }}</div>
             </div>
             @if (vm.canReorderContent()) {
               <div class="btn-group btn-group-sm">
@@ -54,8 +54,8 @@
               <div class="col-md-3">
                 <select
                   class="form-select form-select-sm"
-                  [ngModel]="vm.taskDrafts()[task.uuid]?.task_type ?? task.task_type"
-                  (ngModelChange)="vm.setTaskDraft(task.uuid, 'task_type', $event)"
+                  [ngModel]="vm.taskDrafts()[task.uuid]?.taskType ?? task.taskType"
+                  (ngModelChange)="vm.setTaskDraft(task.uuid, 'taskType', $event)"
                 >
                   <option value="discussion">Discussion</option>
                   <option value="reading">Reading</option>
@@ -92,8 +92,8 @@
               <div class="col-12">
                 <input
                   class="form-control form-control-sm"
-                  [ngModel]="vm.taskDrafts()[task.uuid]?.assignee_label ?? (task.assignee_label ?? '')"
-                  (ngModelChange)="vm.setTaskDraft(task.uuid, 'assignee_label', $event)"
+                  [ngModel]="vm.taskDrafts()[task.uuid]?.assigneeLabel ?? (task.assigneeLabel ?? '')"
+                  (ngModelChange)="vm.setTaskDraft(task.uuid, 'assigneeLabel', $event)"
                   placeholder="Assignee label"
                 />
               </div>

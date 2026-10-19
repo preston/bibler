@@ -33,80 +33,80 @@ export class StudiesService {
   }
 
   listPaged(query?: PagedQuery): Observable<{ studies: Study[]; meta?: PageMeta }> {
-    const url = `${this.biblerService.getUrl()}/studies.json`;
+    const url = `${this.biblerService.getUrl()}/studies`;
     return this.http.get<{ studies: Study[]; meta?: PageMeta }>(url, {
       params: pagedQueryToParams(query)
     });
   }
 
   show(studyUuid: string): Observable<{ study: Study }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}`;
     return this.http.get<{ study: Study }>(url);
   }
 
   create(payload: Partial<Study>): Observable<{ study: Study }> {
-    const url = `${this.biblerService.getUrl()}/studies.json`;
+    const url = `${this.biblerService.getUrl()}/studies`;
     return this.http.post<{ study: Study }>(url, { study: payload });
   }
 
   update(studyUuid: string, payload: Partial<Study>): Observable<{ study: Study }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}`;
     return this.http.patch<{ study: Study }>(url, { study: payload });
   }
 
   destroy(studyUuid: string): Observable<unknown> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}`;
     return this.http.delete(url);
   }
 
   listAssignments(studyUuid: string): Observable<{ assignments: StudyAssignment[] }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/assignments.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/assignments`;
     return this.http.get<{ assignments: StudyAssignment[] }>(url);
   }
 
   createAssignment(studyUuid: string, payload: { username?: string; email?: string }): Observable<{ assignment: StudyAssignment }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/assignments.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/assignments`;
     return this.http.post<{ assignment: StudyAssignment }>(url, payload);
   }
 
   destroyAssignment(studyUuid: string, userId: string): Observable<unknown> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/assignments/${userId}.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/assignments/${userId}`;
     return this.http.delete(url);
   }
 
   transferOwner(studyUuid: string, userId: string): Observable<{ study: Study }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/transfer_owner.json`;
-    return this.http.post<{ study: Study }>(url, { user_id: userId });
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/transfer-owner`;
+    return this.http.post<{ study: Study }>(url, { userId: userId });
   }
 
   studyVerses(studyUuid: string): Observable<{ verses: StudyVerse[] }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/verses.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/verses`;
     return this.http.get<{ verses: StudyVerse[] }>(url);
   }
 
   createStudyVerse(studyUuid: string, payload: Partial<StudyVerse>): Observable<{ verse: StudyVerse }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/verses.json`;
-    return this.http.post<{ verse: StudyVerse }>(url, { study_verse: payload });
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/verses`;
+    return this.http.post<{ verse: StudyVerse }>(url, { studyVerse: payload });
   }
 
   updateStudyVerse(studyUuid: string, verseUuid: string, payload: Partial<StudyVerse>): Observable<{ verse: StudyVerse }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/verses/${verseUuid}.json`;
-    return this.http.patch<{ verse: StudyVerse }>(url, { study_verse: payload });
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/verses/${verseUuid}`;
+    return this.http.patch<{ verse: StudyVerse }>(url, { studyVerse: payload });
   }
 
   destroyStudyVerse(studyUuid: string, verseUuid: string): Observable<unknown> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/verses/${verseUuid}.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/verses/${verseUuid}`;
     return this.http.delete(url);
   }
 
   commentaries(studyUuid: string): Observable<{ commentaries: StudyCommentary[] }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/commentaries.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/commentaries`;
     return this.http.get<{ commentaries: StudyCommentary[] }>(url);
   }
 
   createCommentary(studyUuid: string, payload: Partial<StudyCommentary>): Observable<{ commentary: StudyCommentary }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/commentaries.json`;
-    return this.http.post<{ commentary: StudyCommentary }>(url, { study_commentary: payload });
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/commentaries`;
+    return this.http.post<{ commentary: StudyCommentary }>(url, { studyCommentary: payload });
   }
 
   updateCommentary(
@@ -114,23 +114,23 @@ export class StudiesService {
     commentaryUuid: string,
     payload: Partial<StudyCommentary>
   ): Observable<{ commentary: StudyCommentary }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/commentaries/${commentaryUuid}.json`;
-    return this.http.patch<{ commentary: StudyCommentary }>(url, { study_commentary: payload });
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/commentaries/${commentaryUuid}`;
+    return this.http.patch<{ commentary: StudyCommentary }>(url, { studyCommentary: payload });
   }
 
   destroyCommentary(studyUuid: string, commentaryUuid: string): Observable<unknown> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/commentaries/${commentaryUuid}.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/commentaries/${commentaryUuid}`;
     return this.http.delete(url);
   }
 
   questions(studyUuid: string): Observable<{ questions: StudyQuestion[] }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions`;
     return this.http.get<{ questions: StudyQuestion[] }>(url);
   }
 
   createQuestion(studyUuid: string, payload: Partial<StudyQuestion>): Observable<{ question: StudyQuestion }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions.json`;
-    return this.http.post<{ question: StudyQuestion }>(url, { study_question: payload });
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions`;
+    return this.http.post<{ question: StudyQuestion }>(url, { studyQuestion: payload });
   }
 
   updateQuestion(
@@ -138,22 +138,22 @@ export class StudiesService {
     questionUuid: string,
     payload: Partial<StudyQuestion>
   ): Observable<{ question: StudyQuestion }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions/${questionUuid}.json`;
-    return this.http.patch<{ question: StudyQuestion }>(url, { study_question: payload });
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions/${questionUuid}`;
+    return this.http.patch<{ question: StudyQuestion }>(url, { studyQuestion: payload });
   }
 
   reorderQuestions(studyUuid: string, orderedUuids: string[]): Observable<{ questions: StudyQuestion[] }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions/reorder.json`;
-    return this.http.post<{ questions: StudyQuestion[] }>(url, { ordered_uuids: orderedUuids });
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions/reorder`;
+    return this.http.post<{ questions: StudyQuestion[] }>(url, { orderedUuids: orderedUuids });
   }
 
   destroyQuestion(studyUuid: string, questionUuid: string): Observable<unknown> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions/${questionUuid}.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions/${questionUuid}`;
     return this.http.delete(url);
   }
 
   answers(studyUuid: string, questionUuid: string): Observable<{ answers: StudyAnswer[] }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions/${questionUuid}/answers.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions/${questionUuid}/answers`;
     return this.http.get<{ answers: StudyAnswer[] }>(url);
   }
 
@@ -162,66 +162,66 @@ export class StudiesService {
     questionUuid: string,
     payload: Partial<StudyAnswer>
   ): Observable<{ answer: StudyAnswer }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions/${questionUuid}/answers.json`;
-    return this.http.post<{ answer: StudyAnswer }>(url, { study_answer: payload });
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions/${questionUuid}/answers`;
+    return this.http.post<{ answer: StudyAnswer }>(url, { studyAnswer: payload });
   }
 
   destroyAnswer(studyUuid: string, questionUuid: string, answerUuid: string): Observable<unknown> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions/${questionUuid}/answers/${answerUuid}.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/questions/${questionUuid}/answers/${answerUuid}`;
     return this.http.delete(url);
   }
 
   tasks(studyUuid: string): Observable<{ tasks: StudyTask[] }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/tasks.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/tasks`;
     return this.http.get<{ tasks: StudyTask[] }>(url);
   }
 
   createTask(studyUuid: string, payload: Partial<StudyTask>): Observable<{ task: StudyTask }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/tasks.json`;
-    return this.http.post<{ task: StudyTask }>(url, { study_task: payload });
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/tasks`;
+    return this.http.post<{ task: StudyTask }>(url, { studyTask: payload });
   }
 
   updateTask(studyUuid: string, taskUuid: string, payload: Partial<StudyTask>): Observable<{ task: StudyTask }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/tasks/${taskUuid}.json`;
-    return this.http.patch<{ task: StudyTask }>(url, { study_task: payload });
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/tasks/${taskUuid}`;
+    return this.http.patch<{ task: StudyTask }>(url, { studyTask: payload });
   }
 
   reorderTasks(studyUuid: string, orderedUuids: string[]): Observable<{ tasks: StudyTask[] }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/tasks/reorder.json`;
-    return this.http.post<{ tasks: StudyTask[] }>(url, { ordered_uuids: orderedUuids });
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/tasks/reorder`;
+    return this.http.post<{ tasks: StudyTask[] }>(url, { orderedUuids: orderedUuids });
   }
 
   destroyTask(studyUuid: string, taskUuid: string): Observable<unknown> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/tasks/${taskUuid}.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/tasks/${taskUuid}`;
     return this.http.delete(url);
   }
 
-  planItems(studyUuid: string): Observable<{ plan_items: StudyPlanItem[] }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/plan_items.json`;
-    return this.http.get<{ plan_items: StudyPlanItem[] }>(url);
+  planItems(studyUuid: string): Observable<{ planItems: StudyPlanItem[] }> {
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/plan-items`;
+    return this.http.get<{ planItems: StudyPlanItem[] }>(url);
   }
 
-  createPlanItem(studyUuid: string, payload: Partial<StudyPlanItem>): Observable<{ plan_item: StudyPlanItem }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/plan_items.json`;
-    return this.http.post<{ plan_item: StudyPlanItem }>(url, { study_plan_item: payload });
+  createPlanItem(studyUuid: string, payload: Partial<StudyPlanItem>): Observable<{ planItem: StudyPlanItem }> {
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/plan-items`;
+    return this.http.post<{ planItem: StudyPlanItem }>(url, { studyPlanItem: payload });
   }
 
   updatePlanItem(
     studyUuid: string,
     uuid: string,
     payload: Partial<StudyPlanItem>
-  ): Observable<{ plan_item: StudyPlanItem }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/plan_items/${uuid}.json`;
-    return this.http.patch<{ plan_item: StudyPlanItem }>(url, { study_plan_item: payload });
+  ): Observable<{ planItem: StudyPlanItem }> {
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/plan-items/${uuid}`;
+    return this.http.patch<{ planItem: StudyPlanItem }>(url, { studyPlanItem: payload });
   }
 
-  reorderPlanItems(studyUuid: string, orderedUuids: string[]): Observable<{ plan_items: StudyPlanItem[] }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/plan_items/reorder.json`;
-    return this.http.post<{ plan_items: StudyPlanItem[] }>(url, { ordered_uuids: orderedUuids });
+  reorderPlanItems(studyUuid: string, orderedUuids: string[]): Observable<{ planItems: StudyPlanItem[] }> {
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/plan-items/reorder`;
+    return this.http.post<{ planItems: StudyPlanItem[] }>(url, { orderedUuids: orderedUuids });
   }
 
   destroyPlanItem(studyUuid: string, planItemUuid: string): Observable<unknown> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/plan_items/${planItemUuid}.json`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/plan-items/${planItemUuid}`;
     return this.http.delete(url);
   }
 
@@ -229,13 +229,13 @@ export class StudiesService {
     studyUuid: string,
     planItemUuid: string,
     status: 'todo' | 'revisit' | 'complete'
-  ): Observable<{ plan_item: StudyPlanItem }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/plan_items/${planItemUuid}/state.json`;
-    return this.http.patch<{ plan_item: StudyPlanItem }>(url, { status });
+  ): Observable<{ planItem: StudyPlanItem }> {
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/plan-items/${planItemUuid}/state`;
+    return this.http.patch<{ planItem: StudyPlanItem }>(url, { status });
   }
 
   aiGenerateCommentary(studyUuid: string, prompt: string, instruction: string): Observable<{ output?: string; error?: string }> {
-    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/ai/generate_commentary`;
+    const url = `${this.biblerService.getUrl()}/studies/${studyUuid}/ai/generate-commentary`;
     return this.http.post<{ output?: string; error?: string }>(url, { prompt, instruction });
   }
 
@@ -251,7 +251,7 @@ export class StudiesService {
     const td = options?.targetDurationMinutes;
     const body: Record<string, unknown> = { message, stream: true };
     if (td != null && td > 0) {
-      body['target_duration_minutes'] = Math.floor(td);
+      body['targetDurationMinutes'] = Math.floor(td);
     }
     return new Observable<StudyAssistantSseMessage>((subscriber) => {
       const ac = new AbortController();

@@ -16,29 +16,29 @@ export class DocumentsService {
   list(q?: string): Observable<{ documents: DocumentRecord[] }> {
     let params = new HttpParams();
     if (q?.trim()) params = params.set('q', q.trim());
-    return this.http.get<{ documents: DocumentRecord[] }>(`${this.bibler.getUrl()}/documents.json`, { params });
+    return this.http.get<{ documents: DocumentRecord[] }>(`${this.bibler.getUrl()}/documents`, { params });
   }
 
   show(uuid: string): Observable<{ document: DocumentRecord }> {
-    return this.http.get<{ document: DocumentRecord }>(`${this.bibler.getUrl()}/documents/${uuid}.json`);
+    return this.http.get<{ document: DocumentRecord }>(`${this.bibler.getUrl()}/documents/${uuid}`);
   }
 
-  create(payload: { original_filename: string; extracted_text: string }): Observable<{ document: DocumentRecord }> {
-    return this.http.post<{ document: DocumentRecord }>(`${this.bibler.getUrl()}/documents.json`, {
+  create(payload: { originalFilename: string; extractedText: string }): Observable<{ document: DocumentRecord }> {
+    return this.http.post<{ document: DocumentRecord }>(`${this.bibler.getUrl()}/documents`, {
       document: payload
     });
   }
 
   update(
     uuid: string,
-    payload: Partial<Pick<DocumentRecord, 'original_filename' | 'extracted_text'>>
+    payload: Partial<Pick<DocumentRecord, 'originalFilename' | 'extractedText'>>
   ): Observable<{ document: DocumentRecord }> {
-    return this.http.patch<{ document: DocumentRecord }>(`${this.bibler.getUrl()}/documents/${uuid}.json`, {
+    return this.http.patch<{ document: DocumentRecord }>(`${this.bibler.getUrl()}/documents/${uuid}`, {
       document: payload
     });
   }
 
   destroy(uuid: string): Observable<unknown> {
-    return this.http.delete(`${this.bibler.getUrl()}/documents/${uuid}.json`);
+    return this.http.delete(`${this.bibler.getUrl()}/documents/${uuid}`);
   }
 }

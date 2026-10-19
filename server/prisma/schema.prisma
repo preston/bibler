@@ -1,0 +1,386 @@
+// Author: Preston Lee
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["partialIndexes"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model InternalMetadata {
+  key        String   @id @db.VarChar
+  value      String?  @db.VarChar
+  createdAt DateTime @db.Timestamp(6) @map("created_at")
+  updatedAt DateTime @db.Timestamp(6) @map("updated_at")
+  @@map("ar_internal_metadata")
+}
+
+model Bible {
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  abbreviation         String   @unique(map: "index_bibles_on_abbreviation") @db.VarChar
+  aiDefaultAramaic   Boolean  @unique(map: "idx_bibles_ai_default_aramaic_true", where: raw("ai_default_aramaic")) @default(false) @map("ai_default_aramaic")
+  aiDefaultEnglish   Boolean  @unique(map: "idx_bibles_ai_default_english_true", where: raw("ai_default_english")) @default(false) @map("ai_default_english")
+  aiDefaultGreek     Boolean  @unique(map: "idx_bibles_ai_default_greek_true", where: raw("ai_default_greek")) @default(false) @map("ai_default_greek")
+  aiDefaultHebrewOt Boolean  @unique(map: "idx_bibles_ai_default_hebrew_true", where: raw("ai_default_hebrew_ot")) @default(false) @map("ai_default_hebrew_ot")
+  createdAt           DateTime @db.Timestamp @map("created_at")
+  language             String   @default("") @db.VarChar
+  license              String?  @default("")
+  name                 String   @db.VarChar
+  updatedAt           DateTime @db.Timestamp @map("updated_at")
+  books                Book[]
+  verses               Verse[]
+
+  @@unique([name, language], map: "index_bibles_on_name_and_language")
+  @@map("bibles")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Book {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bibleId   String   @db.Uuid @map("bible_id")
+  createdAt DateTime @db.Timestamp @map("created_at")
+  name       String   @db.VarChar
+  ordinal    Int
+  testament  String   @db.VarChar
+  updatedAt DateTime @db.Timestamp @map("updated_at")
+  bibles     Bible   @relation(fields: [bibleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_2a229d7e26")
+  verses     Verse[]
+
+  @@unique([bibleId, name], map: "index_books_on_bible_id_and_name")
+  @@index([bibleId], map: "index_books_on_bible_id")
+  @@index([bibleId, testament, ordinal], map: "index_books_on_bible_id_and_testament_and_ordinal")
+  @@index([ordinal], map: "index_books_on_ordinal")
+  @@map("books")
+}
+
+model Document {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt        DateTime @db.Timestamp(6) @map("created_at")
+  extractedText    String @map("extracted_text")
+  originalFilename String   @db.VarChar @map("original_filename")
+  updatedAt        DateTime @db.Timestamp(6) @map("updated_at")
+  userId           String   @db.Uuid @map("user_id")
+  users             User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_2be0318c46")
+
+  @@index([userId], map: "index_documents_on_user_id")
+  @@index([userId, updatedAt], map: "index_documents_on_user_id_and_updated_at")
+  @@map("documents")
+}
+
+model McpSession {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt       DateTime @db.Timestamp(6) @map("created_at")
+  initializedAt   DateTime @db.Timestamp(6) @map("initialized_at")
+  lastActivityAt DateTime @db.Timestamp(6) @map("last_activity_at")
+  lastEventId    String?  @db.VarChar @map("last_event_id")
+  sessionId       String   @unique(map: "index_mcp_sessions_on_session_id") @db.VarChar @map("session_id")
+  updatedAt       DateTime @db.Timestamp(6) @map("updated_at")
+
+  @@index([lastActivityAt], map: "index_mcp_sessions_on_last_activity_at")
+  @@map("mcp_sessions")
+}
+
+model Role {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  access        Boolean       @default(false)
+  administrator Boolean       @default(false)
+  bibles        Boolean       @default(false)
+  createdAt    DateTime      @db.Timestamp(6) @map("created_at")
+  curation      Boolean       @default(false)
+  isDefault    Boolean       @default(false) @map("is_default")
+  name          String        @unique(map: "index_roles_on_name") @db.VarChar
+  updatedAt    DateTime      @db.Timestamp(6) @map("updated_at")
+  rolesUsers   RolesUser[]
+  @@map("roles")
+}
+
+model RolesUser {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roleId String @db.Uuid @map("role_id")
+  userId String @db.Uuid @map("user_id")
+  roles   Role  @relation(fields: [roleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_9dada905f6")
+  users   User  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_e2a7142459")
+
+  @@unique([userId, roleId], map: "index_roles_users_on_user_id_and_role_id")
+  @@index([roleId], map: "index_roles_users_on_role_id")
+  @@index([userId], map: "index_roles_users_on_user_id")
+  @@map("roles_users")
+}
+
+model SchemaMigration {
+  version String @id @db.VarChar
+  @@map("schema_migrations")
+}
+
+model SermonSectionVerse {
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bibleUuid        String          @db.VarChar @map("bible_uuid")
+  bookUuid         String          @db.VarChar @map("book_uuid")
+  chapter           Int
+  createdAt        DateTime        @db.Timestamp(6) @map("created_at")
+  ordinal           Int
+  position          Int             @default(0)
+  sermonSectionId String          @db.Uuid @map("sermon_section_id")
+  updatedAt        DateTime        @db.Timestamp(6) @map("updated_at")
+  verseText        String? @map("verse_text")
+  verseUuid        String?         @db.VarChar @map("verse_uuid")
+  sermonSections   SermonSection @relation(fields: [sermonSectionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_ec61c299eb")
+
+  @@index([sermonSectionId], map: "index_sermon_section_verses_on_sermon_section_id")
+  @@index([sermonSectionId, position], map: "index_sermon_section_verses_on_sermon_section_id_and_position")
+  @@index([verseUuid], map: "index_sermon_section_verses_on_verse_uuid")
+  @@map("sermon_section_verses")
+}
+
+model SermonSection {
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  body                  String?
+  createdAt            DateTime                @db.Timestamp(6) @map("created_at")
+  estimatedMinutes     Int? @map("estimated_minutes")
+  position              Int                     @default(0)
+  sermonId             String                  @db.Uuid @map("sermon_id")
+  title                 String                  @default("") @db.VarChar
+  updatedAt            DateTime                @db.Timestamp(6) @map("updated_at")
+  sermonSectionVerses SermonSectionVerse[]
+  sermons               Sermon                 @relation(fields: [sermonId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_a8a5febfdd")
+
+  @@index([sermonId], map: "index_sermon_sections_on_sermon_id")
+  @@index([sermonId, position], map: "index_sermon_sections_on_sermon_id_and_position")
+  @@map("sermon_sections")
+}
+
+model Sermon {
+  id                      String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt              DateTime          @db.Timestamp(6) @map("created_at")
+  targetDurationMinutes Int? @map("target_duration_minutes")
+  title                   String            @db.VarChar
+  updatedAt              DateTime          @db.Timestamp(6) @map("updated_at")
+  userId                 String            @db.Uuid @map("user_id")
+  visibility              String            @default("private") @db.VarChar
+  sermonSections         SermonSection[]
+  users                   User             @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_f6b0cd5569")
+
+  @@index([userId], map: "index_sermons_on_user_id")
+  @@index([userId, updatedAt], map: "index_sermons_on_user_id_and_updated_at")
+  @@index([visibility], map: "index_sermons_on_visibility")
+  @@map("sermons")
+}
+
+model Study {
+  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt         DateTime             @db.Timestamp(6) @map("created_at")
+  goal               String?
+  ownerId           String?              @db.Uuid @map("owner_id")
+  title              String               @db.VarChar
+  updatedAt         DateTime             @db.Timestamp(6) @map("updated_at")
+  visibility         String               @default("private") @db.VarChar
+  users              User?               @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_f0b9f60ddd")
+  studyAnswers      StudyAnswer[]
+  studyAssignments  StudyAssignment[]
+  studyCommentaries StudyCommentary[]
+  studyPlanItems   StudyPlanItem[]
+  studyQuestions    StudyQuestion[]
+  studyTasks        StudyTask[]
+  studyVerses       StudyVerse[]
+
+  @@index([ownerId], map: "index_studies_on_owner_id")
+  @@map("studies")
+}
+
+model StudyAnswer {
+  id                  String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  authorLabel        String?             @db.VarChar @map("author_label")
+  createdAt          DateTime            @db.Timestamp(6) @map("created_at")
+  response            String
+  studyCommentaryId String?             @db.Uuid @map("study_commentary_id")
+  studyId            String              @db.Uuid @map("study_id")
+  studyQuestionId   String              @db.Uuid @map("study_question_id")
+  updatedAt          DateTime            @db.Timestamp(6) @map("updated_at")
+  userId             String?             @db.Uuid @map("user_id")
+  visibility          String              @default("study") @db.VarChar
+  studyQuestions     StudyQuestion     @relation(fields: [studyQuestionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_1ffc893bfe")
+  studies             Study             @relation(fields: [studyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_31e14e99c7")
+  studyCommentaries  StudyCommentary? @relation(fields: [studyCommentaryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_88efe0a3b6")
+  users               User?              @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_c6a78633d8")
+
+  @@index([studyCommentaryId], map: "index_study_answers_on_study_commentary_id")
+  @@index([studyId], map: "index_study_answers_on_study_id")
+  @@index([studyQuestionId], map: "index_study_answers_on_study_question_id")
+  @@index([studyQuestionId, createdAt], map: "index_study_answers_on_study_question_id_and_created_at")
+  @@index([userId], map: "index_study_answers_on_user_id")
+  @@map("study_answers")
+}
+
+model StudyAssignment {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @db.Timestamp(6) @map("created_at")
+  studyId   String   @db.Uuid @map("study_id")
+  updatedAt DateTime @db.Timestamp(6) @map("updated_at")
+  userId    String   @db.Uuid @map("user_id")
+  users      User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_3fca42ccec")
+  studies    Study  @relation(fields: [studyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_a11c8d2c58")
+
+  @@unique([studyId, userId], map: "index_study_assignments_on_study_id_and_user_id")
+  @@index([studyId], map: "index_study_assignments_on_study_id")
+  @@index([userId], map: "index_study_assignments_on_user_id")
+  @@map("study_assignments")
+}
+
+model StudyCommentary {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  body          String?
+  context       Json            @default("{}")
+  createdAt    DateTime        @db.Timestamp(6) @map("created_at")
+  position      Int             @default(0)
+  prompt        String?
+  sourceType   String          @default("manual") @db.VarChar @map("source_type")
+  studyId      String          @db.Uuid @map("study_id")
+  title         String          @db.VarChar
+  updatedAt    DateTime        @db.Timestamp(6) @map("updated_at")
+  studyAnswers StudyAnswer[]
+  studies       Study         @relation(fields: [studyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_78b8b27c41")
+
+  @@index([studyId], map: "index_study_commentaries_on_study_id")
+  @@index([studyId, position], map: "index_study_commentaries_on_study_id_and_position")
+  @@map("study_commentaries")
+}
+
+model StudyPlanItemUserState {
+  id                 String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt         DateTime         @db.Timestamp(6) @map("created_at")
+  status             String           @default("todo") @db.VarChar
+  studyPlanItemId String           @db.Uuid @map("study_plan_item_id")
+  updatedAt         DateTime         @db.Timestamp(6) @map("updated_at")
+  userId            String           @db.Uuid @map("user_id")
+  studyPlanItems   StudyPlanItem @relation(fields: [studyPlanItemId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_40ee3fa13b")
+  users              User            @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_7c369e9f09")
+
+  @@unique([userId, studyPlanItemId], map: "idx_plan_item_user_state_unique")
+  @@index([studyPlanItemId], map: "index_study_plan_item_user_states_on_study_plan_item_id")
+  @@index([userId], map: "index_study_plan_item_user_states_on_user_id")
+  @@map("study_plan_item_user_states")
+}
+
+model StudyPlanItem {
+  id                          String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  anchor                      String?                       @db.VarChar
+  createdAt                  DateTime                      @db.Timestamp(6) @map("created_at")
+  duration                    Int?
+  itemType                   String                        @db.VarChar @map("item_type")
+  notes                       String?
+  position                    Int                           @default(0)
+  resourceType               String?                       @db.VarChar @map("resource_type")
+  resourceUuid               String?                       @db.VarChar @map("resource_uuid")
+  studyId                    String                        @db.Uuid @map("study_id")
+  title                       String                        @db.VarChar
+  updatedAt                  DateTime                      @db.Timestamp(6) @map("updated_at")
+  studyPlanItemUserStates StudyPlanItemUserState[]
+  studies                     Study                       @relation(fields: [studyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_2b3a05c931")
+
+  @@index([studyId, resourceType, resourceUuid], map: "index_plan_items_on_study_and_resource")
+  @@index([studyId], map: "index_study_plan_items_on_study_id")
+  @@index([studyId, position], map: "index_study_plan_items_on_study_id_and_position")
+  @@map("study_plan_items")
+}
+
+model StudyQuestion {
+  id             String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt     DateTime        @db.Timestamp(6) @map("created_at")
+  guidanceNotes String? @map("guidance_notes")
+  position       Int             @default(0)
+  prompt         String
+  questionType  String          @default("discussion") @db.VarChar @map("question_type")
+  studyId       String          @db.Uuid @map("study_id")
+  updatedAt     DateTime        @db.Timestamp(6) @map("updated_at")
+  verseAnchor   Json            @default("{}") @map("verse_anchor")
+  studyAnswers  StudyAnswer[]
+  studies        Study         @relation(fields: [studyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_6522f4e2a1")
+
+  @@index([studyId], map: "index_study_questions_on_study_id")
+  @@index([studyId, position], map: "index_study_questions_on_study_id_and_position")
+  @@map("study_questions")
+}
+
+model StudyTask {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  assigneeLabel String?   @db.VarChar @map("assignee_label")
+  context        Json      @default("{}")
+  createdAt     DateTime  @db.Timestamp(6) @map("created_at")
+  dueAt         DateTime? @db.Timestamp(6) @map("due_at")
+  instruction    String
+  position       Int       @default(0)
+  status         String    @default("open") @db.VarChar
+  studyId       String    @db.Uuid @map("study_id")
+  taskType      String    @default("discussion") @db.VarChar @map("task_type")
+  updatedAt     DateTime  @db.Timestamp(6) @map("updated_at")
+  studies        Study   @relation(fields: [studyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_796fb1b4ff")
+
+  @@index([studyId], map: "index_study_tasks_on_study_id")
+  @@index([studyId, position], map: "index_study_tasks_on_study_id_and_position")
+  @@map("study_tasks")
+}
+
+model StudyVerse {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bibleUuid String   @db.VarChar @map("bible_uuid")
+  bookUuid  String   @db.VarChar @map("book_uuid")
+  chapter    Int
+  createdAt DateTime @db.Timestamp(6) @map("created_at")
+  note       String?
+  ordinal    Int
+  position   Int      @default(0)
+  studyId   String   @db.Uuid @map("study_id")
+  updatedAt DateTime @db.Timestamp(6) @map("updated_at")
+  verseText String? @map("verse_text")
+  verseUuid String?  @db.VarChar @map("verse_uuid")
+  studies    Study  @relation(fields: [studyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_98a2a74569")
+
+  @@index([studyId, bibleUuid, bookUuid, chapter, ordinal], map: "idx_study_verses_lookup_uuid")
+  @@index([bibleUuid], map: "index_study_verses_on_bible_uuid")
+  @@index([bookUuid], map: "index_study_verses_on_book_uuid")
+  @@index([studyId], map: "index_study_verses_on_study_id")
+  @@index([studyId, position], map: "index_study_verses_on_study_id_and_position")
+  @@index([verseUuid], map: "index_study_verses_on_verse_uuid")
+  @@map("study_verses")
+}
+
+model User {
+  id                          String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  apiToken                   String?                       @unique(map: "index_users_on_api_token") @db.VarChar @map("api_token")
+  createdAt                  DateTime                      @db.Timestamp(6) @map("created_at")
+  email                       String                        @unique(map: "index_users_on_email") @default("") @db.VarChar
+  encryptedPassword          String                        @default("") @db.VarChar @map("encrypted_password")
+  name                        String                        @db.VarChar
+  rememberCreatedAt         DateTime?                     @db.Timestamp(6) @map("remember_created_at")
+  resetPasswordSentAt      DateTime?                     @db.Timestamp(6) @map("reset_password_sent_at")
+  resetPasswordToken        String?                       @unique(map: "index_users_on_reset_password_token") @db.VarChar @map("reset_password_token")
+  updatedAt                  DateTime                      @db.Timestamp(6) @map("updated_at")
+  username                    String                        @unique(map: "index_users_on_username") @db.VarChar
+  documents                   Document[]
+  rolesUsers                 RolesUser[]
+  sermons                     Sermon[]
+  studies                     Study[]
+  studyAnswers               StudyAnswer[]
+  studyAssignments           StudyAssignment[]
+  studyPlanItemUserStates StudyPlanItemUserState[]
+  @@map("users")
+}
+
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model Verse {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bibleId   String   @db.Uuid @map("bible_id")
+  bookId    String   @db.Uuid @map("book_id")
+  chapter    Int
+  createdAt DateTime @db.Timestamp @map("created_at")
+  ordinal    Int
+  text       String
+  updatedAt DateTime @db.Timestamp @map("updated_at")
+  bibles     Bible   @relation(fields: [bibleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_892fe8ab53")
+  books      Book    @relation(fields: [bookId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_e0ba489b1e")
+
+  @@unique([bibleId, bookId, chapter, ordinal], map: "index_verses_on_bible_book_chapter_ordinal")
+  @@map("verses")
+}

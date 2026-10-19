@@ -27,9 +27,9 @@
       <tbody>
         @for (f of list(); track f.uuid) {
           <tr>
-            <td>{{ f.original_filename }}</td>
-            <td class="small text-muted text-truncate" style="max-width: 24rem">{{ f.extracted_text_preview ?? '—' }}</td>
-            <td class="small">{{ f.updated_at | date: 'short' }}</td>
+            <td>{{ f.originalFilename }}</td>
+            <td class="small text-muted text-truncate" style="max-width: 24rem">{{ f.extractedTextPreview ?? '—' }}</td>
+            <td class="small">{{ f.updatedAt | date: 'short' }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-outline-danger" (click)="requestDeleteDocument(f)">Delete</button>
             </td>

@@ -11,7 +11,7 @@ import { Bible } from '../models/bible';
 })
 export class BibleService {
 
-	private path = '/bibles.json';
+	private path = '/bibles';
 
 	constructor(private biblerService: BiblerService, private http: HttpClient) {
 	}

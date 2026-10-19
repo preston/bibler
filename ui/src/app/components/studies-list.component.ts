@@ -30,12 +30,12 @@ export class StudiesListComponent implements OnInit {
   publicPage = signal(1);
   publicSearchDraft = signal('');
   publicListQuery = signal('');
-  publicSort = signal('updated_at');
+  publicSort = signal('updatedAt');
   publicDirection = signal<SortDirection>('desc');
   publicPerPage = signal(25);
   readonly publicStudiesSortColumns = [
-    { label: 'Updated', value: 'updated_at' },
-    { label: 'Created', value: 'created_at' },
+    { label: 'Updated', value: 'updatedAt' },
+    { label: 'Created', value: 'createdAt' },
     { label: 'Title', value: 'title' },
     { label: 'Visibility', value: 'visibility' }
   ];
@@ -91,7 +91,7 @@ export class StudiesListComponent implements OnInit {
         sort: this.publicSort(),
         direction: this.publicDirection(),
         page: this.publicPage(),
-        per_page: this.publicPerPage(),
+        perPage: this.publicPerPage(),
         ...(q ? { q } : {})
       })
       .subscribe({
@@ -102,7 +102,7 @@ export class StudiesListComponent implements OnInit {
           if (m) {
             if (m.sort) this.publicSort.set(m.sort);
             if (m.direction) this.publicDirection.set(m.direction);
-            if (m.per_page) this.publicPerPage.set(m.per_page);
+            if (m.perPage) this.publicPerPage.set(m.perPage);
             if (m.page) this.publicPage.set(m.page);
             if (m.q !== undefined) this.publicListQuery.set(m.q);
           }
@@ -193,7 +193,7 @@ export class StudiesListComponent implements OnInit {
   }
 
   formatStudyTotalDuration(study: Study): string {
-    const minutes = study.total_duration_minutes ?? 0;
+    const minutes = study.totalDurationMinutes ?? 0;
     if (!Number.isFinite(minutes) || minutes <= 0) return '—';
     return `${Math.trunc(minutes)}m`;
   }

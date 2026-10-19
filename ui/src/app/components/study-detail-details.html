@@ -46,13 +46,13 @@
           <p class="small text-muted mb-2">Loading…</p>
         }
         <ul class="list-group list-group-flush mb-3 small">
-          @for (a of vm.studyAssignments(); track a.user_id) {
+          @for (a of vm.studyAssignments(); track a.userId) {
             <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
               <div>
                 <span class="fw-medium">{{ a.name }}</span>
                 <span class="text-muted ms-1">@{{ a.username }}</span>
               </div>
-              <button type="button" class="btn btn-sm btn-outline-danger" (click)="vm.removeCoLeader(a.user_id)" [disabled]="vm.accessSectionLoading()">Remove</button>
+              <button type="button" class="btn btn-sm btn-outline-danger" (click)="vm.removeCoLeader(a.userId)" [disabled]="vm.accessSectionLoading()">Remove</button>
             </li>
           }
         </ul>
@@ -74,8 +74,8 @@
                 <label class="form-label small mb-1" for="transfer_owner_select">New owner</label>
                 <select id="transfer_owner_select" class="form-select form-select-sm" [ngModel]="vm.transferOwnerUserId()" (ngModelChange)="vm.transferOwnerUserId.set($event)">
                   <option value="">Select co-leader…</option>
-                  @for (a of vm.studyAssignments(); track a.user_id) {
-                    <option [ngValue]="a.user_id">{{ a.name }} (@{{ a.username }})</option>
+                  @for (a of vm.studyAssignments(); track a.userId) {
+                    <option [ngValue]="a.userId">{{ a.name }} (@{{ a.username }})</option>
                   }
                 </select>
               </div>

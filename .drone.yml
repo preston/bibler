@@ -1,13 +1,45 @@
 ---
-name: latest-amd64
+name: validate
 kind: pipeline
 type: docker
 platform:
   arch: amd64
   os: linux
 steps:
-  - name: publish
-    image: docker:latest
+  - name: checks
+    image: node:26-trixie-slim
+    environment:
+      CI: "true"
+      BIBLER_SERVER_DATABASE_URL: postgresql://bibler:password@postgresql:5432/bibler_test
+      BIBLER_SERVER_TEST_DATABASE_URL: postgresql://bibler:password@postgresql:5432/bibler_test
+    commands:
+      - apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates
+      - npm ci
+      - npm run prisma:generate
+      - npm run typecheck
+      - npm test
+      - npm run build
+      - npm run test:integration
+services:
+  - name: postgresql
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: bibler_test
+      POSTGRES_USER: bibler
+      POSTGRES_PASSWORD: password
+trigger:
+  event: [push, pull_request]
+---
+name: publish-amd64
+kind: pipeline
+type: docker
+depends_on: [validate]
+platform:
+  arch: amd64
+  os: linux
+steps:
+  - name: images
+    image: docker:cli
     environment:
       DOCKER_HOST: unix:///var/run/docker.sock
       DOCKER_USERNAME:
@@ -19,22 +51,34 @@ steps:
         path: /var/run/docker.sock
     commands:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t p3000/bibler-ui:${DRONE_COMMIT_BRANCH}-linux-amd64 .
-      - docker push p3000/bibler-ui:${DRONE_COMMIT_BRANCH}-linux-amd64
+      - |
+        branch_tag=$(printf '%s' "$DRONE_COMMIT_BRANCH" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9_.-' '-' | cut -c1-100)
+        case "$branch_tag" in ""|[.-]*) branch_tag="branch-$branch_tag" ;; esac
+        if [ "$branch_tag" = latest ]; then branch_tag=branch-latest; fi
+        for component in server ui; do
+          image="p3000/bibler-$component"
+          docker build -f "$component/Dockerfile" -t "$image:$DRONE_COMMIT_SHA-linux-amd64" -t "$image:$branch_tag-linux-amd64" .
+          docker push "$image:$DRONE_COMMIT_SHA-linux-amd64"
+          docker push "$image:$branch_tag-linux-amd64"
+        done
 volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
+trigger:
+  event: [push]
+  status: [success]
 ---
-name: latest-arm64
+name: publish-arm64
 kind: pipeline
 type: docker
+depends_on: [validate]
 platform:
   arch: arm64
   os: linux
 steps:
-  - name: publish
-    image: docker:latest
+  - name: images
+    image: docker:cli
     environment:
       DOCKER_HOST: unix:///var/run/docker.sock
       DOCKER_USERNAME:
@@ -46,37 +90,66 @@ steps:
         path: /var/run/docker.sock
     commands:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t p3000/bibler-ui:${DRONE_COMMIT_BRANCH}-linux-arm64 .
-      - docker push p3000/bibler-ui:${DRONE_COMMIT_BRANCH}-linux-arm64
+      - |
+        branch_tag=$(printf '%s' "$DRONE_COMMIT_BRANCH" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9_.-' '-' | cut -c1-100)
+        case "$branch_tag" in ""|[.-]*) branch_tag="branch-$branch_tag" ;; esac
+        if [ "$branch_tag" = latest ]; then branch_tag=branch-latest; fi
+        for component in server ui; do
+          image="p3000/bibler-$component"
+          docker build -f "$component/Dockerfile" -t "$image:$DRONE_COMMIT_SHA-linux-arm64" -t "$image:$branch_tag-linux-arm64" .
+          docker push "$image:$DRONE_COMMIT_SHA-linux-arm64"
+          docker push "$image:$branch_tag-linux-arm64"
+        done
 volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
+trigger:
+  event: [push]
+  status: [success]
 ---
-name: manifest
+name: manifests
 kind: pipeline
 type: docker
-depends_on:
-  - latest-amd64
-  - latest-arm64
+depends_on: [publish-amd64, publish-arm64]
 steps:
-  - name: publish-manifest
-    image: plugins/manifest
-    settings:
-      username:
+  - name: commit-and-branch
+    image: docker:cli
+    environment:
+      DOCKER_USERNAME:
         from_secret: docker_username
-      password:
+      DOCKER_PASSWORD:
         from_secret: docker_password
-      target: p3000/bibler-ui:latest
-      template: p3000/bibler-ui:master-OS-ARCH
-      platforms:
-        - linux/amd64
-        - linux/arm64
-      exclude:
-        - master
+    commands:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - |
+        branch_tag=$(printf '%s' "$DRONE_COMMIT_BRANCH" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9_.-' '-' | cut -c1-100)
+        case "$branch_tag" in ""|[.-]*) branch_tag="branch-$branch_tag" ;; esac
+        if [ "$branch_tag" = latest ]; then branch_tag=branch-latest; fi
+        for component in server ui; do
+          image="p3000/bibler-$component"
+          for tag in "$DRONE_COMMIT_SHA" "$branch_tag"; do
+            docker manifest create "$image:$tag" "$image:$DRONE_COMMIT_SHA-linux-amd64" "$image:$DRONE_COMMIT_SHA-linux-arm64"
+            docker manifest push "$image:$tag"
+          done
+        done
+  - name: latest
+    image: docker:cli
+    environment:
+      DOCKER_USERNAME:
+        from_secret: docker_username
+      DOCKER_PASSWORD:
+        from_secret: docker_password
+    commands:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - |
+        for component in server ui; do
+          image="p3000/bibler-$component"
+          docker manifest create "$image:latest" "$image:$DRONE_COMMIT_SHA-linux-amd64" "$image:$DRONE_COMMIT_SHA-linux-arm64"
+          docker manifest push "$image:latest"
+        done
+    when:
+      branch: [master]
 trigger:
-  branch:
-    include:
-      - master
-  status:
-    - success
+  event: [push]
+  status: [success]

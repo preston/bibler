@@ -1,0 +1,76 @@
+# Uses the same database and named storage as the development stack.
+# Build locally: docker compose -f docker-compose.full.yml up -d --build --wait
+# Published images: docker compose -f docker-compose.full.yml pull && docker compose -f docker-compose.full.yml up -d --no-build --wait
+name: bibler
+
+include:
+  - path: docker-compose.development.yml
+
+services:
+  bibler-server:
+    image: p3000/bibler-server:${BIBLER_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    depends_on:
+      bibler-postgresql:
+        condition: service_healthy
+    env_file:
+      - path: ./server/.env
+        required: false
+    environment:
+      NODE_ENV: production
+      BIBLER_SERVER_PORT: 3000
+      BIBLER_SERVER_DATABASE_URL: postgresql://${BIBLER_POSTGRES_USER:-bibler}:${BIBLER_POSTGRES_PASSWORD:-password}@bibler-postgresql:5432/${BIBLER_POSTGRES_DB:-bibler_development}
+      BIBLER_SERVER_OLLAMA_URL: ${BIBLER_SERVER_OLLAMA_URL:-http://host.docker.internal:11434}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${BIBLER_API_HOST_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 12
+    restart: unless-stopped
+
+  bibler-ui:
+    image: p3000/bibler-ui:${BIBLER_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: ui/Dockerfile
+    depends_on:
+      bibler-server:
+        condition: service_healthy
+    environment:
+      BIBLER_SERVER_URL: ${BIBLER_SERVER_URL:-http://localhost:3000}
+    ports:
+      - "${BIBLER_UI_HOST_PORT:-4200}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 5s
+      start_period: 5s
+      retries: 6
+    restart: unless-stopped
+
+  # Explicit one-shot import; ordinary startup does not require a source checkout.
+  bibler-import:
+    profiles: [import]
+    image: p3000/bibler-server:${BIBLER_IMAGE_TAG:-latest}
+    depends_on:
+      bibler-server:
+        condition: service_healthy
+    command: ["node", "dist/db/import.js"]
+    environment:
+      BIBLER_SERVER_DATABASE_URL: postgresql://${BIBLER_POSTGRES_USER:-bibler}:${BIBLER_POSTGRES_PASSWORD:-password}@bibler-postgresql:5432/${BIBLER_POSTGRES_DB:-bibler_development}
+      BIBLER_SERVER_BIBLE_DATABASES_PATH: /bible_databases
+      BIBLER_SERVER_IMPORT_TRANSLATIONS: ${BIBLER_SERVER_IMPORT_TRANSLATIONS:-}
+    volumes:
+      - type: bind
+        source: ${BIBLER_SERVER_BIBLE_DATABASES_PATH:-../bible_databases}
+        target: /bible_databases
+        read_only: true
+        bind:
+          create_host_path: false

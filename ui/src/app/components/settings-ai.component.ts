@@ -29,7 +29,7 @@ export class SettingsAiComponent implements OnInit {
     { label: 'UUID', value: 'uuid' },
     { label: 'Language', value: 'language' },
     { label: 'Abbreviation', value: 'abbreviation' },
-    { label: 'Updated', value: 'updated_at' }
+    { label: 'Updated', value: 'updatedAt' }
   ];
 
   private readonly toast = inject(ToastService);
@@ -48,7 +48,7 @@ export class SettingsAiComponent implements OnInit {
       sort: this.sort(),
       direction: this.direction(),
       page: this.page(),
-      per_page: this.perPage()
+      perPage: this.perPage()
     }).subscribe({
       next: (r) => {
         this.bibles.set(r.bibles);

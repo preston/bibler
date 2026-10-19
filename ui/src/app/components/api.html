@@ -1,265 +1,61 @@
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-sm-3">
-			<h2><span class="bi bi-arrow-left-right"></span> Developer API</h2>
-			<p><a href="/">Bibler</a> supports a RESTful JSON API for developing your own mashups.</p>
-			<p>Developers are free to integrate Bibler into custom applications for
-				light development, testing, and non-production purposes. For production use 
-				you must deploy your own copy of <a href="/">Bibler</a>.</p>
-			<hr>
-			<h5>Quick Navigation</h5>
-			<ul class="list-unstyled">
-				<li><a href="#global-resources" class="text-decoration-none">Global Resources</a></li>
-				<li><a href="#bible-resources" class="text-decoration-none">Bible-Specific Resources</a></li>
-				<li><a href="#chapter-verse" class="text-decoration-none">Chapters & Verses</a></li>
-				<li><a href="#search" class="text-decoration-none">Search</a></li>
-			</ul>
-		</div>
-		<div class="col-sm-9">
-			<!-- Global Resources -->
-			<h3 id="global-resources" class="mb-4"><span class="bi bi-globe"></span> Global Resources</h3>
-
-			<div class="card bg-light mb-3" id="bibles">
-				<div class="card-body">
-					<h4><small class="badge bg-success">GET</small> List all bibles</h4>
-					<p class="mb-2">
-						<code>{{biblerService.getUrl()}}/bibles.json</code>
-					</p>
-					<p class="text-muted small">Returns a list of all available Bible translations.</p>
-					<a [href]="biblerService.getUrl() + '/bibles.json'" target="_blank"
-						class="btn btn-sm btn-outline-primary me-2">
-						<span class="bi bi-box-arrow-up-right"></span> Open URL
-					</a>
-					<button aria-controls="bibles_result" aria-expanded="false" class="btn btn-sm btn-primary"
-						data-bs-target="#bibles_result" data-bs-toggle="collapse" type="button">
-						<span class="bi bi-eye"></span> Show Result
-					</button>
-					<pre class="collapse mt-3" id="bibles_result"><code>{{stringify(bibles())}}</code></pre>
-				</div>
-			</div>
-
-			<div class="card bg-light mb-3" id="bible-show">
-				<div class="card-body">
-					<h4><small class="badge bg-success">GET</small> Get a specific bible</h4>
-					<p class="mb-2">
-						<code>{{biblerService.getUrl()}}/bibles/:id.json</code>
-					</p>
-					<p class="text-muted small">Returns details for a specific Bible translation. Use the Bible's ID or
-						UUID.</p>
-					@if (bible()) {
-					<p class="mb-2">
-						<strong>Example:</strong> <code>{{biblerService.getUrl()}}/bibles/{{bible()!.uuid}}.json</code>
-					</p>
-					}
-				</div>
-			</div>
-
-			<!-- Bible-Specific Resources -->
-			<h3 id="bible-resources" class="mb-4 mt-5"><span class="bi bi-book"></span> Bible-Specific Resources</h3>
-
-			@if (bible()) {
-			<div class="card bg-light mb-3" id="bible-books">
-				<div class="card-body">
-					<h4><small class="badge bg-success">GET</small> List books for a specific bible</h4>
-					<p class="mb-2">
-						<code>{{biblerService.getUrl()}}/bibles/:bible_uuid/books.json</code>
-					</p>
-					<p class="text-muted small">Returns all books available in a specific Bible translation. Each book
-						includes a <code>testament</code> string: <code>old</code>, <code>new</code>, or
-						<code>other</code>.</p>
-					<p class="mb-2">
-						<strong>Example:</strong> <a
-							[href]="biblerService.getUrl() + '/bibles/' + bible()!.uuid + '/books.json'"
-							target="_blank">
-							<code>{{biblerService.getUrl()}}/bibles/{{bible()!.uuid}}/books.json</code>
-						</a>
-					</p>
-					<button aria-controls="bible_books_result" aria-expanded="false" class="btn btn-sm btn-primary"
-						data-bs-target="#bible_books_result" data-bs-toggle="collapse" type="button">
-						<span class="bi bi-eye"></span> Show Result
-					</button>
-					<pre class="collapse mt-3" id="bible_books_result"><code>{{stringify(books())}}</code></pre>
-				</div>
-			</div>
-
-			<div class="card bg-light mb-3" id="bible-book-show">
-				<div class="card-body">
-					<h4><small class="badge bg-success">GET</small> Get a specific book in a bible</h4>
-					<p class="mb-2">
-						<code>{{biblerService.getUrl()}}/bibles/:bible_uuid/books/:book_uuid.json</code>
-					</p>
-					<p class="text-muted small">Returns details for a specific book within a specific Bible translation.
-					</p>
-					@if (book()) {
-					<p class="mb-2">
-						<strong>Example:</strong> <a
-							[href]="biblerService.getUrl() + '/bibles/' + bible()!.uuid + '/books/' + book()!.uuid + '.json'"
-							target="_blank">
-							<code>{{biblerService.getUrl()}}/bibles/{{bible()!.uuid}}/books/{{book()!.uuid}}.json</code>
-						</a>
-					</p>
-					}
-				</div>
-			</div>
-			}
-
-			<!-- Chapters & Verses -->
-			<h3 id="chapter-verse" class="mb-4 mt-5"><span class="bi bi-list-ol"></span> Chapters & Verses</h3>
-
-			@if (bible() && book() && chapters()) {
-			<div class="card bg-light mb-3" id="chapters">
-				<div class="card-body">
-					<h4><small class="badge bg-success">GET</small> Get chapter list for a bible book</h4>
-					<p class="mb-2">
-						<code>{{biblerService.getUrl()}}/:bible_uuid/:book_uuid.json</code>
-					</p>
-					<p class="text-muted small">Returns an array of chapter numbers available for a specific book in a
-						Bible translation.</p>
-					<p class="mb-2">
-						<strong>Example:</strong> <a
-							[href]="biblerService.getUrl() + '/' + bible()!.uuid + '/' + book()!.uuid + '.json'"
-							target="_blank">
-							<code>{{biblerService.getUrl()}}/{{bible()!.uuid}}/{{book()!.uuid}}.json</code>
-						</a>
-					</p>
-					<button aria-controls="chapters_result" aria-expanded="false" class="btn btn-sm btn-primary"
-						data-bs-target="#chapters_result" data-bs-toggle="collapse" type="button">
-						<span class="bi bi-eye"></span> Show Result
-					</button>
-					<pre class="collapse mt-3" id="chapters_result"><code>{{stringify(chapters())}}</code></pre>
-				</div>
-			</div>
-			}
-
-			@if (bible() && book() && chapter()) {
-			<div class="card bg-light mb-3" id="verses">
-				<div class="card-body">
-					<h4><small class="badge bg-success">GET</small> Get all verses in a chapter</h4>
-					<p class="mb-2">
-						<code>{{biblerService.getUrl()}}/:bible_uuid/:book_uuid/:chapter.json</code>
-					</p>
-					<p class="text-muted small">Returns all verses for a specific chapter in a book.</p>
-					<p class="mb-2">
-						<strong>Example:</strong> <a
-							[href]="biblerService.getUrl() + '/' + bible()!.uuid + '/' + book()!.uuid + '/' + chapter() + '.json'"
-							target="_blank">
-							<code>{{biblerService.getUrl()}}/{{bible()!.uuid}}/{{book()!.uuid}}/{{chapter()}}.json</code>
-						</a>
-					</p>
-					<button aria-controls="verses_result" aria-expanded="false" class="btn btn-sm btn-primary"
-						data-bs-target="#verses_result" data-bs-toggle="collapse" type="button">
-						<span class="bi bi-eye"></span> Show Result
-					</button>
-					<pre class="collapse mt-3" id="verses_result"><code>{{stringify(verses())}}</code></pre>
-				</div>
-			</div>
-
-			<div class="card bg-light mb-3" id="verse-show">
-				<div class="card-body">
-					<h4><small class="badge bg-success">GET</small> Get a specific verse</h4>
-					<p class="mb-2">
-						<code>{{biblerService.getUrl()}}/:bible_uuid/:book_uuid/:chapter/:ordinal</code>
-					</p>
-					<p class="text-muted small">Returns a specific verse by chapter and verse number. Supports multiple
-						formats: <code>.json</code>, <code>.xml</code>, <code>.txt</code>, etc.</p>
-					@if (selectedVerse()) {
-					<p class="mb-2">
-						<strong>Example:</strong> <a
-							[href]="biblerService.getUrl() + '/' + bible()!.uuid + '/' + book()!.uuid + '/' + chapter() + '/' + selectedVerse()!.ordinal + '.json'"
-							target="_blank">
-							<code>{{biblerService.getUrl()}}/{{bible()!.uuid}}/{{book()!.uuid}}/{{chapter()}}/{{selectedVerse()!.ordinal}}.json</code>
-						</a>
-					</p>
-					<div class="mb-2">
-						<strong>Other formats:</strong>
-						<ul class="list-unstyled ms-3">
-							<li><code>{{biblerService.getUrl()}}/{{bible()!.uuid}}/{{book()!.uuid}}/{{chapter()}}/{{selectedVerse()!.ordinal}}.txt</code>
-							</li>
-							<li><code>{{biblerService.getUrl()}}/{{bible()!.uuid}}/{{book()!.uuid}}/{{chapter()}}/{{selectedVerse()!.ordinal}}.xml</code>
-							</li>
-						</ul>
-					</div>
-					} @else {
-					<p class="text-muted small">Select a chapter above to see example URLs.</p>
-					}
-				</div>
-			</div>
-			}
-
-			<!-- Search -->
-			<h3 id="search" class="mb-4 mt-5"><span class="bi bi-search"></span> Search</h3>
-
-			@if (bible()) {
-			<div class="card bg-light mb-3" id="search">
-				<div class="card-body">
-					<h4><small class="badge bg-warning text-dark">POST</small> Full text bible search</h4>
-					<p class="mb-2">
-						<code>{{biblerService.getUrl()}}/:bible_uuid/search.json</code>
-					</p>
-					<p class="text-muted small">Searches all verses in a Bible translation for the specified text.
-						Returns up to 100 matching verses.</p>
-					<p class="mb-2">
-						<strong>Example URL:</strong>
-						<code>{{biblerService.getUrl()}}/{{bible()!.uuid}}/search.json</code>
-					</p>
-					<h6 class="mt-3">Request Parameters</h6>
-					<table class="table table-sm table-bordered">
-						<thead>
-							<tr>
-								<th>Parameter</th>
-								<th>Type</th>
-								<th>Required</th>
-								<th>Description</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><code>text</code></td>
-								<td>string</td>
-								<td><span class="badge bg-danger">Yes</span></td>
-								<td>The search query text</td>
-							</tr>
-						</tbody>
-					</table>
-					<h6 class="mt-3">Example Request</h6>
-					<pre><code>POST {{biblerService.getUrl()}}/{{bible()!.uuid}}/search.json
-Content-Type: application/x-www-form-urlencoded
-
-text=jesus christ</code></pre>
-					<h6 class="mt-3">cURL Example</h6>
-					<pre><code>curl -X POST "{{biblerService.getUrl()}}/{{bible()!.uuid}}/search.json" \
-  -d "text=jesus christ"</code></pre>
-					<h6 class="mt-3">JavaScript Example</h6>
-					<pre><code>fetch('{{biblerService.getUrl()}}/{{bible()!.uuid}}/search.json', {{'{'}}
-  method: 'POST',
-  headers: {{'{'}}
-    'Content-Type': 'application/x-www-form-urlencoded',
-  {{'}'}},
-  body: new URLSearchParams({{'{'}}
-    text: 'jesus christ'
-  {{'}'}})
-{{'}'}})
-.then(response => response.json())
-.then(data => console.log(data));</code></pre>
-				</div>
-			</div>
-			}
-
-			<!-- API Usage Notes -->
-			<div class="card border-info mb-3 mt-5">
-				<div class="card-header bg-info text-white">
-					<h5 class="mb-0"><span class="bi bi-info-circle"></span> API Usage Notes</h5>
-				</div>
-				<div class="card-body">
-					<ul>
-						<li>All endpoints return JSON by default when using the <code>.json</code> extension</li>
-						<li>Endpoints use UUID-based lookups</li>
-						<li>Search results are limited to 100 verses per query</li>
-						<li>Rate limiting may apply to prevent abuse - use responsibly</li>
-						<li>For production applications, deploy your own Bibler server instance</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div class="row">
+    <div class="col-sm-3">
+      <h2><span class="bi bi-arrow-left-right"></span> Developer API</h2>
+      <p>Bibler provides a JSON REST API for scripture browsing and application integrations.</p>
+      <p>Deploy your own Bibler instance for production integrations.</p>
+      <p>API base: <code>{{biblerService.getUrl()}}</code></p>
+    </div>
+    <div class="col-sm-9">
+      <h3 class="mb-4">Scripture resources</h3>
+      <div class="card bg-light mb-3">
+        <div class="card-body">
+          <h4><small class="badge bg-success">GET</small> Bible translations</h4>
+          <p><a [href]="biblerService.getUrl() + '/bibles'" target="_blank" rel="noopener"><code>{{biblerService.getUrl()}}/bibles</code></a></p>
+          <p><code>{{biblerService.getUrl()}}/bibles/:bibleUuid</code></p>
+          <pre>{{stringify(bibles())}}</pre>
+        </div>
+      </div>
+      @if (bible()) {
+      <div class="card bg-light mb-3">
+        <div class="card-body">
+          <h4><small class="badge bg-success">GET</small> Books</h4>
+          <p><code>{{biblerService.getUrl()}}/bibles/:bibleUuid/books</code></p>
+          <p><code>{{biblerService.getUrl()}}/bibles/:bibleUuid/books/:bookUuid</code></p>
+          <p><a [href]="biblerService.getUrl() + '/bibles/' + bible()!.uuid + '/books'" target="_blank" rel="noopener">Open books for {{bible()!.name}}</a></p>
+          <p>Books include a <code>testament</code> value of <code>old</code>, <code>new</code>, or <code>other</code>.</p>
+          <pre>{{stringify(books())}}</pre>
+        </div>
+      </div>
+      }
+      @if (bible() && book()) {
+      <div class="card bg-light mb-3">
+        <div class="card-body">
+          <h4><small class="badge bg-success">GET</small> Chapters and verses</h4>
+          <p><code>{{biblerService.getUrl()}}/bibles/:bibleUuid/books/:bookUuid/chapters</code></p>
+          <p><code>{{biblerService.getUrl()}}/bibles/:bibleUuid/books/:bookUuid/chapters/:chapter/verses</code></p>
+          <p><code>{{biblerService.getUrl()}}/bibles/:bibleUuid/books/:bookUuid/chapters/:chapter/verses/:ordinal</code></p>
+          <p><a [href]="biblerService.getUrl() + '/bibles/' + bible()!.uuid + '/books/' + book()!.uuid + '/chapters'" target="_blank" rel="noopener">Open chapters for {{book()!.name}}</a></p>
+          <pre>{{stringify(chapters())}}</pre>
+          @if (chapter()) {
+            <pre>{{stringify(verses())}}</pre>
+          }
+        </div>
+      </div>
+      }
+      <div class="card bg-light mb-3">
+        <div class="card-body">
+          <h4><small class="badge bg-warning text-dark">POST</small> Scripture search</h4>
+          <p><code>{{biblerService.getUrl()}}/bibles/:bibleUuid/search</code></p>
+          <p>Send a JSON object with a <code>text</code> property. Search returns up to 100 matching verses.</p>
+          <pre><code>{{'{'}} "text": "jesus christ" {{'}'}}</code></pre>
+        </div>
+      </div>
+      <div class="card border-info mb-3">
+        <div class="card-body">
+          <p class="mb-0">REST endpoints use UUID identifiers, camelCase JSON properties, and JSON responses. Authenticated application endpoints accept an <code>Authorization: Bearer &lt;token&gt;</code> header.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

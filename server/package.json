@@ -1,0 +1,43 @@
+{
+  "name": "bibler-server",
+  "version": "5.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^26"
+  },
+  "scripts": {
+    "build": "prisma generate && tsc -p tsconfig.json",
+    "dev": "node --watch --env-file-if-exists=.env src/index.ts",
+    "start": "node --env-file-if-exists=.env dist/index.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test tests/*.test.ts",
+    "test:integration": "node --test --test-concurrency=1 tests/*.integration.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "db:bootstrap": "node --env-file-if-exists=.env src/db/bootstrap.ts",
+    "db:seed": "node --env-file-if-exists=.env src/db/seed.ts",
+    "db:import": "node --env-file-if-exists=.env src/db/import.ts",
+    "test:ai:live": "node --env-file-if-exists=.env --test tests/ai.live.ts",
+    "db:catalog": "node --env-file-if-exists=.env src/db/snapshot.ts"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "~7.10.0",
+    "@prisma/client": "~7.10.0",
+    "bcryptjs": "^3.0.2",
+    "bibler-core": "file:../core",
+    "cors": "^2.8.6",
+    "csv-parse": "^7.0.3",
+    "express": "^5.3.0",
+    "pg": "^8.23.1",
+    "prisma": "~7.10.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.5",
+    "@types/pg": "^8.15.5",
+    "typescript": "~6.0.0"
+  }
+}

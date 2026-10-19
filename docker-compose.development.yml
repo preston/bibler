@@ -1,0 +1,24 @@
+# Infrastructure for host-run npm workspaces. Values default to local development only.
+name: bibler
+
+services:
+  bibler-postgresql:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: ${BIBLER_POSTGRES_DB:-bibler_development}
+      POSTGRES_USER: ${BIBLER_POSTGRES_USER:-bibler}
+      POSTGRES_PASSWORD: ${BIBLER_POSTGRES_PASSWORD:-password}
+    ports:
+      - "${BIBLER_DATABASE_HOST_PORT:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      start_period: 10s
+      retries: 12
+    volumes:
+      - bibler-database:/var/lib/postgresql
+    restart: unless-stopped
+
+volumes:
+  bibler-database:

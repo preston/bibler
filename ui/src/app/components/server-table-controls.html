@@ -11,15 +11,15 @@
     >
     <button class="btn btn-outline-secondary" type="button" (click)="search.emit()">Search</button>
   </div>
-  @if (meta && meta.total_pages > 1) {
+  @if (meta && meta.totalPages > 1) {
     <button class="btn btn-sm btn-outline-secondary" type="button" [disabled]="meta.page <= 1" (click)="pageChange.emit(meta.page - 1)">Prev</button>
-    <button class="btn btn-sm btn-outline-secondary" type="button" [disabled]="meta.page >= meta.total_pages" (click)="pageChange.emit(meta.page + 1)">Next</button>
+    <button class="btn btn-sm btn-outline-secondary" type="button" [disabled]="meta.page >= meta.totalPages" (click)="pageChange.emit(meta.page + 1)">Next</button>
   }
   <div class="form-floating mb-0" style="width: 6.75rem;">
     <select
       class="form-select form-select-sm"
       [id]="'stc-per-page-' + instanceId"
-      [ngModel]="meta?.per_page ?? 25"
+      [ngModel]="meta?.perPage ?? 25"
       (ngModelChange)="emitPerPage($event)"
     >
       <option [value]="10">10</option>
@@ -56,9 +56,9 @@
   </div>
   <span class="text-muted small ms-auto">
     @if (meta) {
-      {{meta.total_count}} total
-      @if (meta.total_pages > 1) {
-        <span> · page {{meta.page}} / {{meta.total_pages}}</span>
+      {{meta.totalCount}} total
+      @if (meta.totalPages > 1) {
+        <span> · page {{meta.page}} / {{meta.totalPages}}</span>
       }
     }
   </span>

@@ -18,14 +18,14 @@ export class SettingsStudiesComponent implements OnInit {
   error = signal('');
   loading = signal(false);
   q = signal('');
-  sort = signal('updated_at');
+  sort = signal('updatedAt');
   direction = signal<SortDirection>('desc');
   page = signal(1);
   perPage = signal(25);
 
   readonly sortable = [
-    { label: 'Updated', value: 'updated_at' },
-    { label: 'Created', value: 'created_at' },
+    { label: 'Updated', value: 'updatedAt' },
+    { label: 'Created', value: 'createdAt' },
     { label: 'Title', value: 'title' },
     { label: 'Visibility', value: 'visibility' }
   ];
@@ -47,7 +47,7 @@ export class SettingsStudiesComponent implements OnInit {
       sort: this.sort(),
       direction: this.direction(),
       page: this.page(),
-      per_page: this.perPage()
+      perPage: this.perPage()
     }).subscribe({
       next: (r) => {
         this.studies.set(r.studies);

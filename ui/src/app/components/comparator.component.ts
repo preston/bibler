@@ -199,11 +199,11 @@ export class ComparatorComponent extends BookBasedDeepLinkComponent implements O
     if (bibles.length === 0 || this.defaultsApplied) return;
     this.defaultsApplied = true;
 
-    const defaultPrimary = bibles.find((b) => !!b.ai_default_english) ?? bibles[0];
+    const defaultPrimary = bibles.find((b) => !!b.aiDefaultEnglish) ?? bibles[0];
     this.selectBible(defaultPrimary.uuid);
 
     const defaultSecondary =
-      bibles.find((b) => !!b.ai_default_hebrew_ot) ?? bibles.find((b) => b.uuid !== defaultPrimary.uuid) ?? defaultPrimary;
+      bibles.find((b) => !!b.aiDefaultHebrewOt) ?? bibles.find((b) => b.uuid !== defaultPrimary.uuid) ?? defaultPrimary;
     if (!this.selectedBibleSecondaryUuid()) {
       this.selectBibleSecondary(defaultSecondary.uuid);
     }
@@ -303,10 +303,10 @@ export class ComparatorComponent extends BookBasedDeepLinkComponent implements O
     if (!primaryBible || !secondaryBbl || !primaryBook || !secondaryBk || chapter === null) return;
 
     const payload: ComparatorAiCommentaryRequest = {
-      primary_bible_uuid: primaryBible.uuid,
-      secondary_bible_uuid: secondaryBbl.uuid,
-      primary_book_uuid: primaryBook.uuid,
-      secondary_book_uuid: secondaryBk.uuid,
+      primaryBibleUuid: primaryBible.uuid,
+      secondaryBibleUuid: secondaryBbl.uuid,
+      primaryBookUuid: primaryBook.uuid,
+      secondaryBookUuid: secondaryBk.uuid,
       chapter
     };
 
@@ -366,18 +366,18 @@ export class ComparatorComponent extends BookBasedDeepLinkComponent implements O
     return {
       ordinal,
       commentary: typeof commentary === 'string' ? commentary : '',
-      linguistic_notes: this.stringOrUndefined(data['linguistic_notes']),
-      translation_issues: this.stringOrUndefined(data['translation_issues']),
-      cultural_context: this.stringOrUndefined(data['cultural_context']),
-      anthropological_context: this.stringOrUndefined(data['anthropological_context']),
-      translation_lens: this.stringOrUndefined(data['translation_lens']),
-      grammar_notes: this.stringOrUndefined(data['grammar_notes']),
-      idiom_notes: this.stringArrayOrUndefined(data['idiom_notes']),
-      interlinear_tokens: this.parseInterlinearTokens(data['interlinear_tokens'])
+      linguisticNotes: this.stringOrUndefined(data['linguisticNotes']),
+      translationIssues: this.stringOrUndefined(data['translationIssues']),
+      culturalContext: this.stringOrUndefined(data['culturalContext']),
+      anthropologicalContext: this.stringOrUndefined(data['anthropologicalContext']),
+      translationLens: this.stringOrUndefined(data['translationLens']),
+      grammarNotes: this.stringOrUndefined(data['grammarNotes']),
+      idiomNotes: this.stringArrayOrUndefined(data['idiomNotes']),
+      interlinearTokens: this.parseInterlinearTokens(data['interlinearTokens'])
     };
   }
 
-  private parseInterlinearTokens(raw: unknown): ComparatorAiVerseCommentary['interlinear_tokens'] {
+  private parseInterlinearTokens(raw: unknown): ComparatorAiVerseCommentary['interlinearTokens'] {
     if (!Array.isArray(raw)) return undefined;
     const tokens = raw
       .map((item) => {
@@ -393,7 +393,7 @@ export class ComparatorComponent extends BookBasedDeepLinkComponent implements O
           morphology: this.stringOrUndefined((item as Record<string, unknown>)['morphology']),
           gloss: this.stringOrUndefined((item as Record<string, unknown>)['gloss']),
           confidence: Number.isFinite(confidence) ? confidence : undefined,
-          ambiguity_note: this.stringOrUndefined((item as Record<string, unknown>)['ambiguity_note'])
+          ambiguityNote: this.stringOrUndefined((item as Record<string, unknown>)['ambiguityNote'])
         };
       })
       .filter((v): v is NonNullable<typeof v> => !!v);

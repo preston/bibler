@@ -91,8 +91,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
   answersByQuestion = signal<Record<string, StudyAnswer[]>>({});
   studyVerseNoteDrafts = signal<Record<string, string>>({});
   commentaryDrafts = signal<Record<string, { title: string; body: string; prompt: string }>>({});
-  questionDrafts = signal<Record<string, { prompt: string; question_type: string; guidance_notes: string }>>({});
-  taskDrafts = signal<Record<string, { instruction: string; task_type: string; assignee_label: string }>>({});
+  questionDrafts = signal<Record<string, { prompt: string; questionType: string; guidanceNotes: string }>>({});
+  taskDrafts = signal<Record<string, { instruction: string; taskType: string; assigneeLabel: string }>>({});
   planItemDrafts = signal<Record<string, { title: string; notes: string; lyrics: string; duration: string }>>({});
 
   commentaryTitle = signal('');
@@ -189,7 +189,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
   );
   readonly remainingEstimatedMinutes = computed(() =>
     this.planItems().reduce((sum, item) => {
-      if ((item.my_status ?? 'todo') === 'complete') return sum;
+      if ((item.myStatus ?? 'todo') === 'complete') return sum;
       return sum + (this.itemDisplayDuration(item) ?? 0);
     }, 0)
   );
@@ -206,7 +206,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
    * What the main panel is focused on for Study AI copy: study-level, a workspace browse route, or a step route.
    * Replaces the old selectedPlanItem + detailPaneMode heuristic.
    */
-  readonly planWorkspaceContextKind = computed((): 'study' | StudyPlanItem['item_type'] => {
+  readonly planWorkspaceContextKind = computed((): 'study' | StudyPlanItem['itemType'] => {
     const st = this.study();
     if (!st) return 'study';
     const tree = this.router.parseUrl(this.studyWorkspaceUrl());
@@ -217,11 +217,11 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     const rest = segments.slice(2);
     if (rest.length === 0) return 'study';
     if (rest[0] === 'ai' || rest[0] === 'details') return 'study';
-    if (rest[0] === 'workspace' && rest[1]) return rest[1] as StudyPlanItem['item_type'];
-    if (rest[0] === 'step' && rest[2]) return rest[2] as StudyPlanItem['item_type'];
+    if (rest[0] === 'workspace' && rest[1]) return rest[1] as StudyPlanItem['itemType'];
+    if (rest[0] === 'step' && rest[2]) return rest[2] as StudyPlanItem['itemType'];
     return 'study';
   });
-  /** Bibles available in the reader: server AI defaults only (see study.ai_default_reference_bibles). */
+  /** Bibles available in the reader: server AI defaults only (see study.aiDefaultReferenceBibles). */
   scopedBibles = computed(() => {
     const st = this.study();
     const all = this.bibles();
@@ -235,25 +235,25 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
   readonly showStudyDetailsEdit = computed(() => {
     const m = this.studyMode();
     if (m === 'participant') return false;
-    return this.study()?.capabilities.can_edit_structure ?? false;
+    return this.study()?.capabilities.canEditStructure ?? false;
   });
 
   /** Sidebar view dropdown options from server RBAC. */
   readonly availableStudyModesList = computed((): StudyMode[] => {
     const s = this.study();
-    const modes = s?.available_study_modes;
+    const modes = s?.availableStudyModes;
     return modes?.length ? modes : (['participant'] as StudyMode[]);
   });
 
   readonly canManageStudyAccess = computed(() => {
     if (this.studyMode() === 'participant') return false;
-    const r = this.study()?.my_study_role;
+    const r = this.study()?.myStudyRole;
     return r === 'owner' || r === 'co_leader' || r === 'curator';
   });
 
   readonly canTransferOwnership = computed(() => {
     if (this.studyMode() === 'participant') return false;
-    return this.study()?.my_study_role === 'owner';
+    return this.study()?.myStudyRole === 'owner';
   });
 
   constructor(
@@ -271,7 +271,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
   }
 
   private syncStudyVerseBookNameCache(verses: StudyVerse[]): void {
-    const uniqueBibleUuids = [...new Set(verses.map((v) => v.bible_uuid))];
+    const uniqueBibleUuids = [...new Set(verses.map((v) => v.bibleUuid))];
     for (const bibleUuid of uniqueBibleUuids) {
       if (this.bibleUuidsBookListFetched.has(bibleUuid) || this.bibleUuidsBookListInFlight.has(bibleUuid)) continue;
       const bible = this.bibles().find((b) => b.uuid === bibleUuid);
@@ -303,13 +303,13 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
    */
   private scopeContentToSelectedStep<T extends { position: number }>(
     items: T[],
-    itemType: StudyPlanItem['item_type']
+    itemType: StudyPlanItem['itemType']
   ): T[] {
     const selected = this.selectedPlanItem();
-    if (!selected || selected.item_type !== itemType) return items;
+    if (!selected || selected.itemType !== itemType) return items;
 
     const orderedPlanItems = [...this.planItems()]
-      .filter((p) => p.item_type === itemType)
+      .filter((p) => p.itemType === itemType)
       .sort((a, b) => a.position - b.position);
     const selectedIndex = orderedPlanItems.findIndex((p) => p.uuid === selected.uuid);
     if (selectedIndex < 0) return [];
@@ -381,8 +381,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
         void this.router.navigate(['/studies', st.uuid], { replaceUrl: true });
         return;
       }
-      if (item.item_type !== kind) {
-        void this.router.navigate(['/studies', st.uuid, 'step', uuid, item.item_type], { replaceUrl: true });
+      if (item.itemType !== kind) {
+        void this.router.navigate(['/studies', st.uuid, 'step', uuid, item.itemType], { replaceUrl: true });
         return;
       }
       this.selectedPlanItemUuid.set(uuid);
@@ -395,7 +395,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
 
   changeStudyMode(mode: StudyMode): void {
     const st = this.study();
-    const allowed = st?.available_study_modes ?? (['participant'] as StudyMode[]);
+    const allowed = st?.availableStudyModes ?? (['participant'] as StudyMode[]);
     const next = allowed.includes(mode) ? mode : (allowed[0] ?? 'participant');
     this.studyMode.set(next);
     if (next === 'participant') {
@@ -426,7 +426,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
         this.editTitle.set(response.study.title ?? '');
         this.editGoal.set(response.study.goal ?? '');
         this.editVisibility.set(response.study.visibility ?? 'private');
-        const allowed = response.study.available_study_modes ?? (['participant'] as StudyMode[]);
+        const allowed = response.study.availableStudyModes ?? (['participant'] as StudyMode[]);
         let mode = this.studyMode();
         if (!allowed.includes(mode)) {
           mode = defaultStudyViewMode(response.study);
@@ -504,7 +504,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     studyUuid: string,
     options?: {
       selectFirstPlanOnOpenForParticipant?: boolean;
-      thenNavigate?: { uuid: string; kind: StudyPlanItem['item_type'] };
+      thenNavigate?: { uuid: string; kind: StudyPlanItem['itemType'] };
     }
   ): void {
     const loadSeq = ++this.workspaceLoadSeq;
@@ -514,24 +514,24 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     this.loadTasksWorkspace(studyUuid, loadSeq);
     this.studiesService.planItems(studyUuid).subscribe((response) => {
       if (loadSeq !== this.workspaceLoadSeq) return;
-      this.planItems.set(response.plan_items);
+      this.planItems.set(response.planItems);
       const currentSelection = this.selectedPlanItemUuid();
-      const selectionStillExists = response.plan_items.some((x) => x.uuid === currentSelection);
+      const selectionStillExists = response.planItems.some((x) => x.uuid === currentSelection);
       if (
         options?.selectFirstPlanOnOpenForParticipant &&
         this.studyMode() === 'participant' &&
-        response.plan_items.length > 0
+        response.planItems.length > 0
       ) {
-        const first = response.plan_items[0];
+        const first = response.planItems[0];
         this.selectedPlanItemUuid.set(first.uuid);
-        void this.router.navigate(['/studies', studyUuid, 'step', first.uuid, first.item_type], { replaceUrl: true });
+        void this.router.navigate(['/studies', studyUuid, 'step', first.uuid, first.itemType], { replaceUrl: true });
       } else if (selectionStillExists) {
         this.selectedPlanItemUuid.set(currentSelection);
       } else {
-        this.selectedPlanItemUuid.set(response.plan_items[0]?.uuid ?? '');
+        this.selectedPlanItemUuid.set(response.planItems[0]?.uuid ?? '');
       }
       const drafts: Record<string, { title: string; notes: string; lyrics: string; duration: string }> = {};
-      for (const p of response.plan_items) {
+      for (const p of response.planItems) {
         drafts[p.uuid] = {
           title: p.title ?? '',
           notes: p.notes ?? '',
@@ -575,9 +575,9 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     this.studiesService.questions(studyUuid).subscribe((response) => {
       if (loadSeq !== this.workspaceLoadSeq) return;
       this.questions.set(response.questions);
-      const drafts: Record<string, { prompt: string; question_type: string; guidance_notes: string }> = {};
+      const drafts: Record<string, { prompt: string; questionType: string; guidanceNotes: string }> = {};
       for (const q of response.questions) {
-        drafts[q.uuid] = { prompt: q.prompt ?? '', question_type: q.question_type ?? 'discussion', guidance_notes: q.guidance_notes ?? '' };
+        drafts[q.uuid] = { prompt: q.prompt ?? '', questionType: q.questionType ?? 'discussion', guidanceNotes: q.guidanceNotes ?? '' };
       }
       this.questionDrafts.set(drafts);
       response.questions.forEach((question) => this.loadAnswers(question.uuid, loadSeq));
@@ -588,9 +588,9 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     this.studiesService.tasks(studyUuid).subscribe((response) => {
       if (loadSeq !== this.workspaceLoadSeq) return;
       this.tasks.set(response.tasks);
-      const drafts: Record<string, { instruction: string; task_type: string; assignee_label: string }> = {};
+      const drafts: Record<string, { instruction: string; taskType: string; assigneeLabel: string }> = {};
       for (const t of response.tasks) {
-        drafts[t.uuid] = { instruction: t.instruction ?? '', task_type: t.task_type ?? 'discussion', assignee_label: t.assignee_label ?? '' };
+        drafts[t.uuid] = { instruction: t.instruction ?? '', taskType: t.taskType ?? 'discussion', assigneeLabel: t.assigneeLabel ?? '' };
       }
       this.taskDrafts.set(drafts);
     });
@@ -700,7 +700,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
       .createStudyVerse(
         currentStudy.uuid,
         {
-          verse_uuid: verse.uuid,
+          verseUuid: verse.uuid,
           note: ''
         }
       )
@@ -717,7 +717,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     const currentStudy = this.study();
     if (!currentStudy) return;
     this.studiesService.createCommentary(currentStudy.uuid, {
-      source_type: 'manual',
+      sourceType: 'manual',
       title: this.commentaryTitle().trim(),
       body: this.commentaryBody().trim(),
       prompt: this.commentaryPrompt().trim(),
@@ -746,7 +746,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
       this.aiOutput.set(response.output ?? response.error ?? '');
       if (response.output) {
         this.studiesService.createCommentary(currentStudy.uuid, {
-          source_type: 'ai',
+          sourceType: 'ai',
           title: 'AI Generated Commentary',
           body: response.output,
           prompt: this.aiCommand().trim(),
@@ -767,8 +767,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     if (!currentStudy) return;
     this.studiesService.createQuestion(currentStudy.uuid, {
       prompt: this.questionPrompt().trim(),
-      question_type: this.questionType(),
-      guidance_notes: this.questionGuidance().trim()
+      questionType: this.questionType(),
+      guidanceNotes: this.questionGuidance().trim()
     }).subscribe({
       next: () => {
         this.questionPrompt.set('');
@@ -785,9 +785,9 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     if (!currentStudy) return;
     this.studiesService.createTask(currentStudy.uuid, {
       instruction: this.taskInstruction().trim(),
-      task_type: this.taskType(),
+      taskType: this.taskType(),
       status: 'open',
-      assignee_label: this.taskAssignee().trim()
+      assigneeLabel: this.taskAssignee().trim()
     }).subscribe({
       next: () => {
         this.taskInstruction.set('');
@@ -888,24 +888,24 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     if (!st) return;
     this.studiesService.createPlanItem(st.uuid, {
       title: 'New plan step',
-      item_type: 'custom',
+      itemType: 'custom',
       notes: '',
       duration: this.defaultDurationForItemType('custom')
     }).subscribe({
       next: (r) => {
         this.toast.success('Saved.');
         this.loadStudyWorkspace(st.uuid, {
-          thenNavigate: { uuid: r.plan_item.uuid, kind: r.plan_item.item_type }
+          thenNavigate: { uuid: r.planItem.uuid, kind: r.planItem.itemType }
         });
       },
       error: (err: unknown) => this.toastHttpError(err, 'Could not create plan step.')
     });
   }
 
-  createPlanItemOfType(itemType: StudyPlanItem['item_type']): void {
+  createPlanItemOfType(itemType: StudyPlanItem['itemType']): void {
     const st = this.study();
     if (!st) return;
-    const titles: Record<StudyPlanItem['item_type'], string> = {
+    const titles: Record<StudyPlanItem['itemType'], string> = {
       custom: 'Blank step',
       commentary: 'Commentary step',
       verse: 'Verse step',
@@ -915,14 +915,14 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     };
     this.studiesService.createPlanItem(st.uuid, {
       title: titles[itemType],
-      item_type: itemType,
+      itemType: itemType,
       notes: '',
       duration: this.defaultDurationForItemType(itemType)
     }).subscribe({
       next: (r) => {
         this.toast.success('Saved.');
         this.loadStudyWorkspace(st.uuid, {
-          thenNavigate: { uuid: r.plan_item.uuid, kind: r.plan_item.item_type }
+          thenNavigate: { uuid: r.planItem.uuid, kind: r.planItem.itemType }
         });
       },
       error: (err: unknown) => this.toastHttpError(err, 'Could not create plan step.')
@@ -941,7 +941,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     current[j] = temp;
     this.studiesService.reorderPlanItems(st.uuid, current.map((x) => x.uuid)).subscribe({
       next: (r) => {
-        this.planItems.set(r.plan_items);
+        this.planItems.set(r.planItems);
         this.toast.success('Saved.');
       },
       error: (err: unknown) => this.toastHttpError(err, 'Could not reorder plan steps.')
@@ -956,7 +956,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     moveItemInArray(items, event.previousIndex, event.currentIndex);
     this.studiesService.reorderPlanItems(st.uuid, items.map((x) => x.uuid)).subscribe({
       next: (r) => {
-        this.planItems.set(r.plan_items);
+        this.planItems.set(r.planItems);
         this.toast.success('Saved.');
       },
       error: () => {
@@ -1006,8 +1006,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  setQuestionDraft(questionUuid: string, field: 'prompt' | 'question_type' | 'guidance_notes', value: string): void {
-    this.questionDrafts.update((d) => ({ ...d, [questionUuid]: { ...(d[questionUuid] ?? { prompt: '', question_type: 'discussion', guidance_notes: '' }), [field]: value } }));
+  setQuestionDraft(questionUuid: string, field: 'prompt' | 'questionType' | 'guidanceNotes', value: string): void {
+    this.questionDrafts.update((d) => ({ ...d, [questionUuid]: { ...(d[questionUuid] ?? { prompt: '', questionType: 'discussion', guidanceNotes: '' }), [field]: value } }));
   }
 
   saveQuestion(question: StudyQuestion): void {
@@ -1017,8 +1017,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     if (!d) return;
     this.studiesService.updateQuestion(st.uuid, question.uuid, {
       prompt: d.prompt.trim(),
-      question_type: d.question_type,
-      guidance_notes: d.guidance_notes.trim()
+      questionType: d.questionType,
+      guidanceNotes: d.guidanceNotes.trim()
     }).subscribe({
       next: () => {
         this.toast.success('Saved.');
@@ -1031,8 +1031,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  setTaskDraft(taskUuid: string, field: 'instruction' | 'task_type' | 'assignee_label', value: string): void {
-    this.taskDrafts.update((d) => ({ ...d, [taskUuid]: { ...(d[taskUuid] ?? { instruction: '', task_type: 'discussion', assignee_label: '' }), [field]: value } }));
+  setTaskDraft(taskUuid: string, field: 'instruction' | 'taskType' | 'assigneeLabel', value: string): void {
+    this.taskDrafts.update((d) => ({ ...d, [taskUuid]: { ...(d[taskUuid] ?? { instruction: '', taskType: 'discussion', assigneeLabel: '' }), [field]: value } }));
   }
 
   saveTask(task: StudyTask): void {
@@ -1042,8 +1042,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     if (!d) return;
     this.studiesService.updateTask(st.uuid, task.uuid, {
       instruction: d.instruction.trim(),
-      task_type: d.task_type,
-      assignee_label: d.assignee_label.trim()
+      taskType: d.taskType,
+      assigneeLabel: d.assigneeLabel.trim()
     }).subscribe({
       next: () => {
         this.toast.success('Saved.');
@@ -1084,7 +1084,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     this.studiesService.updatePlanItem(st.uuid, item.uuid, {
       title: d.title.trim(),
       notes: d.notes.trim(),
-      lyrics: item.item_type === 'worship' ? d.lyrics.trim() : null,
+      lyrics: item.itemType === 'worship' ? d.lyrics.trim() : null,
       duration: this.durationPayloadFromInput(d.duration)
     }).subscribe({
       next: () => {
@@ -1101,7 +1101,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
   openPlanItem(item: StudyPlanItem): void {
     const st = this.study();
     if (!st) return;
-    void this.router.navigate(['/studies', st.uuid, 'step', item.uuid, item.item_type]);
+    void this.router.navigate(['/studies', st.uuid, 'step', item.uuid, item.itemType]);
   }
 
   /** Mark the open plan step complete, then go to the next step (requires sign-in). */
@@ -1112,9 +1112,9 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     if (!st || !current || !next || !this.session.isLoggedIn()) return;
     this.studiesService.updatePlanItemState(st.uuid, current.uuid, 'complete').subscribe({
       next: (r) => {
-        const ms = r.plan_item.my_status;
+        const ms = r.planItem.myStatus;
         this.planItems.update((items) =>
-          items.map((i) => (i.uuid === current.uuid ? { ...i, my_status: ms ?? 'complete' } : i))
+          items.map((i) => (i.uuid === current.uuid ? { ...i, myStatus: ms ?? 'complete' } : i))
         );
         this.openPlanItem(next);
       },
@@ -1130,7 +1130,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
   }
 
   canDeleteStudy(): boolean {
-    return this.study()?.capabilities.can_delete_study ?? false;
+    return this.study()?.capabilities.canDeleteStudy ?? false;
   }
 
   deleteEntireStudy(): void {
@@ -1179,26 +1179,26 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** UUIDs from server `ai_default_reference_bibles` (system AI Bibles for this deployment). */
+  /** UUIDs from server `aiDefaultReferenceBibles` (system AI Bibles for this deployment). */
   private aiDefaultBibleUuids(study: Study): string[] {
-    const refs = (study.ai_default_reference_bibles ?? {}) as Record<string, unknown>;
+    const refs = (study.aiDefaultReferenceBibles ?? {}) as Record<string, unknown>;
     const values = Object.values(refs).filter((v): v is Record<string, unknown> => !!v && typeof v === 'object');
     return [...new Set(values.map((v) => String(v['uuid'] ?? '')).filter((s) => !!s))];
   }
 
   canEditStructure(): boolean {
     if (this.studyMode() === 'participant') return false;
-    return this.study()?.capabilities.can_edit_structure ?? false;
+    return this.study()?.capabilities.canEditStructure ?? false;
   }
 
   canManageTasks(): boolean {
     if (this.studyMode() === 'participant') return false;
-    return this.study()?.capabilities.can_manage_tasks ?? false;
+    return this.study()?.capabilities.canManageTasks ?? false;
   }
 
   canReorderContent(): boolean {
     if (this.studyMode() === 'participant') return false;
-    return this.study()?.capabilities.can_reorder_content ?? false;
+    return this.study()?.capabilities.canReorderContent ?? false;
   }
 
   /**
@@ -1280,7 +1280,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
         break;
       }
       case 'plan': {
-        const searches = ev.data['searches'] as Array<{ query_preview?: string; bible_name?: string }> | undefined;
+        const searches = ev.data['searches'] as Array<{ queryPreview?: string; bibleName?: string }> | undefined;
         const n = searches?.length ?? 0;
         this.assistantSearchSummary.set(
           n === 0 ? 'No search phrases in the plan yet.' : `Ready to run ${n} search${n === 1 ? '' : 'es'}.`
@@ -1288,10 +1288,10 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
         break;
       }
       case 'search_results': {
-        const vc = Number(ev.data['verse_count'] ?? 0);
-        const byBible = ev.data['by_bible'] as Array<{ bible_uuid?: string; bible_name?: string | null; count?: number }> | undefined;
+        const vc = Number(ev.data['verseCount'] ?? 0);
+        const byBible = ev.data['byBible'] as Array<{ bibleUuid?: string; bibleName?: string | null; count?: number }> | undefined;
         const parts =
-          byBible?.map((b) => `${b.bible_name || b.bible_uuid || 'Bible'}: ${b.count ?? 0}`) ?? [];
+          byBible?.map((b) => `${b.bibleName || b.bibleUuid || 'Bible'}: ${b.count ?? 0}`) ?? [];
         const errList = ev.data['errors'] as string[] | undefined;
         const errSuffix = errList?.length ? ` (${errList.join('; ')})` : '';
         this.assistantSearchSummary.set(
@@ -1421,25 +1421,25 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
       );
     }
 
-    let pipe$: Observable<{ plan_item: StudyPlanItem }>;
+    let pipe$: Observable<{ planItem: StudyPlanItem }>;
     switch (s.type) {
       case 'add_verse': {
-        const vu = p['verse_uuid'] != null ? String(p['verse_uuid']).trim() : '';
+        const vu = p['verseUuid'] != null ? String(p['verseUuid']).trim() : '';
         const versePayload: Partial<StudyVerse> = vu
-          ? { verse_uuid: vu, note: p['note'] != null ? String(p['note']) : '' }
+          ? { verseUuid: vu, note: p['note'] != null ? String(p['note']) : '' }
           : {
-              bible_uuid: String(p['bible_uuid'] ?? ''),
-              book_uuid: String(p['book_uuid'] ?? ''),
+              bibleUuid: String(p['bibleUuid'] ?? ''),
+              bookUuid: String(p['bookUuid'] ?? ''),
               chapter: Number(p['chapter'] ?? 0),
               ordinal: Number(p['ordinal'] ?? 0),
-              verse_text: p['verse_text'] != null ? String(p['verse_text']) : null,
+              verseText: p['verseText'] != null ? String(p['verseText']) : null,
               note: p['note'] != null ? String(p['note']) : ''
             };
         pipe$ = this.studiesService.createStudyVerse(st.uuid, versePayload).pipe(
           switchMap((r) => this.createPlanItemFromSuggestion$(st.uuid, s, {
             anchor: s.id,
-            resource_type: 'study_verse',
-            resource_uuid: r.verse.uuid
+            resourceType: 'study_verse',
+            resourceUuid: r.verse.uuid
           }))
         );
         break;
@@ -1449,7 +1449,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
           .createCommentary(
             st.uuid,
             {
-              source_type: p['source_type'] === 'ai' ? 'ai' : 'manual',
+              sourceType: p['sourceType'] === 'ai' ? 'ai' : 'manual',
               title: String(p['title'] ?? 'Suggestion'),
               body: p['body'] != null ? String(p['body']) : null,
               prompt: p['prompt'] != null ? String(p['prompt']) : null,
@@ -1459,8 +1459,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
           .pipe(
             switchMap((r) => this.createPlanItemFromSuggestion$(st.uuid, s, {
               anchor: s.id,
-              resource_type: 'study_commentary',
-              resource_uuid: r.commentary.uuid
+              resourceType: 'study_commentary',
+              resourceUuid: r.commentary.uuid
             }))
           );
         break;
@@ -1470,15 +1470,15 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
             st.uuid,
             {
               prompt: String(p['prompt'] ?? ''),
-              question_type: String(p['question_type'] ?? 'discussion'),
-              guidance_notes: p['guidance_notes'] != null ? String(p['guidance_notes']) : ''
+              questionType: String(p['questionType'] ?? 'discussion'),
+              guidanceNotes: p['guidanceNotes'] != null ? String(p['guidanceNotes']) : ''
             }
           )
           .pipe(
             switchMap((r) => this.createPlanItemFromSuggestion$(st.uuid, s, {
               anchor: s.id,
-              resource_type: 'study_question',
-              resource_uuid: r.question.uuid
+              resourceType: 'study_question',
+              resourceUuid: r.question.uuid
             }))
           );
         break;
@@ -1488,16 +1488,16 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
             st.uuid,
             {
               instruction: String(p['instruction'] ?? ''),
-              task_type: String(p['task_type'] ?? 'discussion'),
+              taskType: String(p['taskType'] ?? 'discussion'),
               status: String(p['status'] ?? 'open'),
-              assignee_label: p['assignee_label'] != null ? String(p['assignee_label']) : null
+              assigneeLabel: p['assigneeLabel'] != null ? String(p['assigneeLabel']) : null
             }
           )
           .pipe(
             switchMap((r) => this.createPlanItemFromSuggestion$(st.uuid, s, {
               anchor: s.id,
-              resource_type: 'study_task',
-              resource_uuid: r.task.uuid
+              resourceType: 'study_task',
+              resourceUuid: r.task.uuid
             }))
           );
         break;
@@ -1532,8 +1532,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     studyUuid: string,
     s: StudyAssistantSuggestion,
     extraFields: Partial<StudyPlanItem> = {}
-  ): Observable<{ plan_item: StudyPlanItem }> {
-    const typeMap: Record<StudyAssistantSuggestion['type'], StudyPlanItem['item_type']> = {
+  ): Observable<{ planItem: StudyPlanItem }> {
+    const typeMap: Record<StudyAssistantSuggestion['type'], StudyPlanItem['itemType']> = {
       add_verse: 'verse',
       add_commentary: 'commentary',
       add_question: 'question',
@@ -1545,7 +1545,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
       studyUuid,
       {
         title: s.title || 'Study step',
-        item_type: kind,
+        itemType: kind,
         notes: s.summary,
         duration: this.normalizeDuration(s.duration) ?? this.defaultDurationForItemType(kind),
         ...extraFields
@@ -1565,8 +1565,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
   }
 
   /** Bootstrap Icons class list (includes `bi`) for plan step kind in the sidebar. */
-  planItemTypeIconClasses(kind: StudyPlanItem['item_type']): string {
-    const map: Record<StudyPlanItem['item_type'], string> = {
+  planItemTypeIconClasses(kind: StudyPlanItem['itemType']): string {
+    const map: Record<StudyPlanItem['itemType'], string> = {
       verse: 'bi bi-book',
       commentary: 'bi bi-chat-left-text',
       question: 'bi bi-question-circle',
@@ -1577,8 +1577,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     return map[kind] ?? 'bi bi-circle';
   }
 
-  planItemTypeLabel(kind: StudyPlanItem['item_type']): string {
-    const map: Record<StudyPlanItem['item_type'], string> = {
+  planItemTypeLabel(kind: StudyPlanItem['itemType']): string {
+    const map: Record<StudyPlanItem['itemType'], string> = {
       verse: 'Verse',
       commentary: 'Commentary',
       question: 'Question',
@@ -1597,14 +1597,14 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
   private static readonly PLAN_PROGRESS_ORDER: Array<'todo' | 'revisit' | 'complete'> = ['todo', 'complete', 'revisit'];
 
   planProgressIcon(item: StudyPlanItem): string {
-    const s = item.my_status ?? 'todo';
+    const s = item.myStatus ?? 'todo';
     if (s === 'revisit') return 'bi bi-arrow-repeat';
     if (s === 'complete') return 'bi bi-check-circle-fill';
     return 'bi bi-circle';
   }
 
   planProgressTitle(item: StudyPlanItem): string {
-    const s = item.my_status ?? 'todo';
+    const s = item.myStatus ?? 'todo';
     if (s === 'todo') return 'To do — click to mark complete';
     if (s === 'complete') return 'Complete — click to mark revisit';
     return 'Revisit — click to mark to do';
@@ -1615,14 +1615,14 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     ev.preventDefault();
     const st = this.study();
     if (!st || !this.session.isLoggedIn()) return;
-    const cur = item.my_status ?? 'todo';
+    const cur = item.myStatus ?? 'todo';
     const idx = StudyDetailComponent.PLAN_PROGRESS_ORDER.indexOf(cur);
     const next = StudyDetailComponent.PLAN_PROGRESS_ORDER[(idx + 1) % StudyDetailComponent.PLAN_PROGRESS_ORDER.length];
     this.studiesService.updatePlanItemState(st.uuid, item.uuid, next).subscribe({
       next: (r) => {
-        const ms = r.plan_item.my_status;
+        const ms = r.planItem.myStatus;
         this.planItems.update((items) =>
-          items.map((i) => (i.uuid === item.uuid ? { ...i, my_status: ms ?? next } : i))
+          items.map((i) => (i.uuid === item.uuid ? { ...i, myStatus: ms ?? next } : i))
         );
       },
       error: () => this.toast.danger('Could not update progress.')
@@ -1635,7 +1635,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     ev?.stopPropagation();
     const st = this.study();
     if (!st || !this.session.isLoggedIn() || this.markingAllPlanProgress()) return;
-    const items = this.planItems().filter((i) => (i.my_status ?? 'todo') !== status);
+    const items = this.planItems().filter((i) => (i.myStatus ?? 'todo') !== status);
     if (items.length === 0) {
       this.toast.success('Every step already has that status.');
       return;
@@ -1648,9 +1648,9 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
         concatMap((item) =>
           this.studiesService.updatePlanItemState(st.uuid, item.uuid, status).pipe(
             tap((r) => {
-              const ms = r.plan_item.my_status;
+              const ms = r.planItem.myStatus;
               this.planItems.update((list) =>
-                list.map((x) => (x.uuid === item.uuid ? { ...x, my_status: ms ?? status } : x))
+                list.map((x) => (x.uuid === item.uuid ? { ...x, myStatus: ms ?? status } : x))
               );
             })
           )
@@ -1674,8 +1674,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
 
   readerDeepLinkForStudyVerse(sv: StudyVerse): string {
     const params = new URLSearchParams({
-      bible: sv.bible_uuid,
-      book: sv.book_uuid,
+      bible: sv.bibleUuid,
+      book: sv.bookUuid,
       chapter: String(sv.chapter),
       verse: String(sv.ordinal)
     });
@@ -1684,8 +1684,8 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
 
   comparatorDeepLinkForStudyVerse(sv: StudyVerse): string {
     const params = new URLSearchParams({
-      bible: sv.bible_uuid,
-      book: sv.book_uuid,
+      bible: sv.bibleUuid,
+      book: sv.bookUuid,
       chapter: String(sv.chapter),
       verse: String(sv.ordinal)
     });
@@ -1694,13 +1694,13 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
 
   studyVerseBookLabel(sv: StudyVerse): string {
     return (
-      this.studyVerseBookNamesByUuid()[sv.book_uuid] ?? this.books().find((b) => b.uuid === sv.book_uuid)?.name ?? ''
+      this.studyVerseBookNamesByUuid()[sv.bookUuid] ?? this.books().find((b) => b.uuid === sv.bookUuid)?.name ?? ''
     );
   }
 
   canDeleteContent(): boolean {
     if (this.studyMode() === 'participant') return false;
-    return this.study()?.capabilities.can_delete_content ?? false;
+    return this.study()?.capabilities.canDeleteContent ?? false;
   }
 
   deletePlanItem(item: StudyPlanItem): void {
@@ -1825,7 +1825,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
 
   deleteAnswer(questionUuid: string, answer: StudyAnswer): void {
     const st = this.study();
-    if (!st || !st.capabilities.can_delete_content || this.studyMode() === 'participant') return;
+    if (!st || !st.capabilities.canDeleteContent || this.studyMode() === 'participant') return;
     this.openConfirmation(
       'Delete answer?',
       'Delete this answer?',
@@ -1858,7 +1858,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
   }
 
   refreshStudyAssignments(st: Study): void {
-    const r = st.my_study_role;
+    const r = st.myStudyRole;
     if (r !== 'owner' && r !== 'co_leader' && r !== 'curator') {
       this.studyAssignments.set([]);
       return;
@@ -1964,7 +1964,7 @@ export class StudyDetailComponent implements OnInit, OnDestroy {
     return !n || n <= 0 ? null : n;
   }
 
-  private defaultDurationForItemType(itemType: StudyPlanItem['item_type']): number {
+  private defaultDurationForItemType(itemType: StudyPlanItem['itemType']): number {
     if (itemType === 'verse') return 2;
     if (itemType === 'question') return 7;
     if (itemType === 'commentary') return 5;
